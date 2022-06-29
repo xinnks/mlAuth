@@ -1,0 +1,21 @@
+{
+  "name": "mlAuth",
+  "version": "1.0.0",
+  "description": "Magic link authentication service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write '*.js' '**/*.js'",
+    "dev": "concurrently \"pnpm format\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.18"
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.2",
+    "prettier": "^2.7.1"
+  }
+}
