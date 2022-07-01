@@ -166,6 +166,5 @@ async function notifyUser({ appName, callbackUrl }, email, token) {
 
 module.exports = {
   createMagicLink,
-  verifyMagicLink,
-  deleteMagicLinks,
+  verifyMagicLink
 }

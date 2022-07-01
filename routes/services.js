@@ -5,6 +5,7 @@ const {
   createAccount,
   verifyAccount,
   generateAppKeys,
+  deleteApp,
   logOut,
 } = require("./../controllers/services")
 const Cors = require("cors")
@@ -40,6 +41,11 @@ router.post("/verify", verifyAccount)
  keys creation route route
 */
 router.post("/generate-keys", generateAppKeys)
+
+/*
+ app delete route [PENDING]
+*/
+router.get("/delete", deleteApp)
 
 /*
  login session ending route

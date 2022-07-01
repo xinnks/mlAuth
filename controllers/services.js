@@ -155,6 +155,11 @@ async function generateAppKeys(req, res) {
   })
 }
 
+/**
+ * Deletes an app
+ */
+async function deleteApp(req, res) {}
+
 async function authenticateApp(client, secret) {
   const { status, data: response } = await db.find(appClientIndex, client)
   if (status !== "success") return result("failure", response)
@@ -210,7 +215,6 @@ async function sendAccountChangesNotification(response) {
 
 module.exports = {
   createAccount,
-  updateApp,
   deleteApp,
   verifyAccount,
   generateAppKeys,
