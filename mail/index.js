@@ -106,7 +106,7 @@ class Mail {
    * @param { Object } details => app account details
    * @returns { Boolean }
    **/
-  async notifyOnAccountChanges({ user: { firstName }, appName, email }) {
+  async notifyOnAccountChanges({ firstName, email }, appName) {
     // return true
     const data = {
       Messages: [
