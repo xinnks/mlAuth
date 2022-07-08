@@ -43,7 +43,9 @@ class Mail {
 
   /**
    * @description This function sends a magic link email to an email address
-   * @param { Object } details => Email details
+   * @param { String } appName => Name of app sending the magic link
+   * @param { String } email => Receiving email address
+   * @param { String } url => Magic link url
    * @returns { Boolean }
    **/
   async sendMagicLink(appName, email, url) {
@@ -73,7 +75,8 @@ class Mail {
 
   /**
    * @description This function sends a service account verification email
-   * @param { Object } details => Service account details
+   * @param { Object } {firstName, email} => User's first name and email
+   * @param { String } url => Account verification url
    * @returns { Boolean }
    **/
   async verifyAccount({ firstName, email }, url) {
@@ -103,7 +106,8 @@ class Mail {
 
   /**
    * @description This function sends a notification email to an account on account details changes
-   * @param { Object } details => app account details
+   * @param { Object } {firstName, email} => Account user's first name and email
+   * @param { String } appName => Name of the app that changes have been made to
    * @returns { Boolean }
    **/
   async notifyOnAccountChanges({ firstName, email }, appName) {
