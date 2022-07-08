@@ -10,8 +10,7 @@ const {
 const { appFromEmail, mlAuthService } = require("./../vars")
 
 class Mail {
-  constructor(appName) {
-    this.appName = appName
+  constructor() {
     this.headers = {
       Authorization:
         "Basic " +
@@ -47,14 +46,14 @@ class Mail {
    * @param { Object } details => Email details
    * @returns { Boolean }
    **/
-  async sendMagicLink(email, url) {
+  async sendMagicLink(appName, email, url) {
     // return true
     const data = {
       Messages: [
         {
           From: {
             Email: appFromEmail,
-            Name: this.appName,
+            Name: appName,
           },
           To: [
             {
@@ -62,9 +61,9 @@ class Mail {
               Name: "",
             },
           ],
-          Subject: "Login to " + this.appName,
-          TextPart: `Hey, \n\n Visit this link to login.\n\n ${url}\n\n Thanks, ${this.appName}`,
-          HTMLPart: magicLinkMailMarkup(url, this.appName),
+          Subject: "Login to " + appName,
+          TextPart: `Hey, \n\n Visit this link to login.\n\n ${url}\n\n Thanks, ${appName}`,
+          HTMLPart: magicLinkMailMarkup(url, appName),
         },
       ],
     }
