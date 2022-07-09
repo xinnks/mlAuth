@@ -35,6 +35,15 @@ function comparePasswordHashes(password, passwordHash, salt) {
 }
 
 /**
+ * @description Returns an array of missing parameters
+ * @param { Array } required Required parameters
+ * @param { Object } provided Provided parameters, likely a request body
+ */
+function getMissingParameters(required, provided) {
+  return required.filter((key) => !Object.keys(provided).includes(key))
+}
+
+/**
  * @description Returns a result object
  * @param {String} status => The status being returned, either success or error
  * @param {*} data => The data being returned
@@ -63,4 +72,5 @@ module.exports = {
   comparePasswordHashes,
   result,
   nowInSeconds,
+  getMissingParameters
 }
