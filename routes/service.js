@@ -2,12 +2,10 @@ const express = require("express")
 const router = express.Router()
 const { serviceSessionAuthentication } = require("./../middlewares")
 const {
-  createAccount,
-  verifyAccount,
   generateAppKeys,
   deleteApp,
   logOut,
-} = require("./../controllers/services")
+} = require("./../controllers/service")
 const Cors = require("cors")
 const corsOptions = {
   origin: "*",
@@ -26,16 +24,6 @@ router.post("/", (req, res) => {
     message: "Services Home Page",
   })
 })
-
-/*
- app creation route
-*/
-router.post("/register", createAccount)
-
-/*
- post registration app account verification route
-*/
-router.post("/verify", verifyAccount)
 
 /*
  keys creation route route
