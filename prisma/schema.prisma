@@ -55,6 +55,7 @@ model App {
 model MagicLink {
   appId     String?
   id        String   @id @default(cuid())
+  email     String
   token     String   @unique
   lifespan  Int      @default(1800000)
   app       App?     @relation(fields: [appId], references: [id])
