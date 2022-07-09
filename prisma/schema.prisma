@@ -16,7 +16,7 @@ model User {
   firstName String
   lastName  String
   verified  Boolean   @default(false)
-  verificationToken  String?
+  verificationToken  String? @unique
   apps      App[]
   sessions  Session[]
   createdAt DateTime  @default(now())
