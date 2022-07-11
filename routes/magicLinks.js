@@ -1,5 +1,4 @@
-const express = require("express")
-const router = express.Router()
+const router = require("express").Router()
 const { appAuthentication } = require("./../middlewares")
 const Cors = require("cors")
 const corsOptions = {
