@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const { serviceSessionAuthentication } = require("./../middlewares")
 const {
-  generateAppKeys,
+  regenerateAppKeys,
   deleteApp,
   logOut,
 } = require("./../controllers/service")
@@ -25,22 +25,24 @@ router.post("/", (req, res) => {
   })
 })
 
-/*
- keys creation route route
-*/
-router.post("/generate-keys", generateAppKeys)
+/**
+ * @description Receives keys generation requests
+ */
+router.post("/generate-keys", regenerateAppKeys)
 
-/*
- app delete route [PENDING]
-*/
+/**
+ * @description Receives app deletion requests
+ */
 router.get("/delete", deleteApp)
 
-/*
- login session ending route
-*/
+/**
+ * @description Receives logout requests
+ */
 router.post("/logout", logOut)
 
-// use the router and 401 anything falling through
+/**
+ * @description Use the router and 401 anything falling through
+ */
 router.use("/service", router, (req, res) => {
   res.sendStatus(401)
 })
