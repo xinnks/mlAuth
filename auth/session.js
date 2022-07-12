@@ -11,19 +11,21 @@ class Session {
 
   /**
    * @description Creates a new session
-   * @param {*} userId - Id of user the session belongs to
-   * @param {*} lifeSpan - Lifespan of the session to be created
-   * @returns {Object} 
+   * @param {String} userId - Id of user the session belongs to
+   * @param {Integer} lifeSpan - Lifespan of the session to be created
+   * @returns {Object}
    */
   async create(userId, lifeSpan) {
     let sessionData = {
       userId,
       lifespan: parseInt(lifeSpan || timeOut),
       token: this.token,
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     }
 
-    const { status, data: createResponse } = await sessionDb.createSession(sessionData)
+    const { status, data: createResponse } = await sessionDb.createSession(
+      sessionData
+    )
 
     if (status !== "success") return result("failure", createResponse)
 
@@ -34,9 +36,10 @@ class Session {
    * @description - Verifies a session's validity and expiration status
    */
   async verify() {
-    const { status: sessionStatus, data: sessionData } = await sessionDb.findSession({
-      token,
-    })
+    const { status: sessionStatus, data: sessionData } =
+      await sessionDb.findSession({
+        token: this.token,
+      })
     if (sessionStatus !== "success" || !sessionData)
       return result("failure", "Unknown session")
     let { updatedAt, lifeSpan, id } = sessionData
@@ -52,10 +55,11 @@ class Session {
    * @param {String} sessionId - Session id
    */
   async refresh(sessionId) {
-    const { status: updateStatus, data: response } = await sessionDb.updateSession(
-      { id: sessionId },
-      { updatedAt: nowInSeconds() }
-    )
+    const { status: updateStatus, data: response } =
+      await sessionDb.updateSession(
+        { id: sessionId },
+        { updatedAt: new Date().toISOString() }
+      )
 
     if (updateStatus !== "success") return result("failure", response)
 
@@ -66,14 +70,16 @@ class Session {
    * @description - Deletes a session
    */
   async delete() {
-    const { status: sessionStatus, data: sessionData } = await sessionDb.findSession({
-      token: this.token,
-    })
+    const { status: sessionStatus, data: sessionData } =
+      await sessionDb.findSession({
+        token: this.token,
+      })
     if (sessionStatus !== "success" || !sessionData) return false
 
-    let { status: deletionStatus, data: deletedData } = await sessionDb.deleteSession({
-      token: this.token,
-    })
+    let { status: deletionStatus, data: deletedData } =
+      await sessionDb.deleteSession({
+        token: this.token,
+      })
 
     if (deletionStatus !== "success") return result("failure", deletedData)
 
