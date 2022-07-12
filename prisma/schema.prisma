@@ -31,8 +31,6 @@ model Session {
   user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([userId], name: "sessionUser")
 }
 
 model App {
@@ -48,8 +46,6 @@ model App {
   magicLinks       MagicLink[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
-
-  @@unique([ownerId], name: "appOwner")
 }
 
 model MagicLink {
@@ -61,6 +57,4 @@ model MagicLink {
   app       App?     @relation(fields: [appId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([appId], name: "linkApp")
 }
