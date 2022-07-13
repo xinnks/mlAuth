@@ -1,5 +1,5 @@
 {
-  "name": "mlAuth",
+  "name": "mlauth",
   "version": "1.0.0",
   "description": "Magic link authentication service",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "format": "prettier --write '*.js' '**/*.js'",
     "dev": "concurrently \"pnpm format\" \"pnpm serve\"",
     "db:studio": "pnpm dlx prisma studio",
-    "db:deploy": "pnpm dlx prisma migrate deploy"
+    "db:push": "pnpm dlx prisma db push"
   },
   "keywords": [],
   "author": "",
