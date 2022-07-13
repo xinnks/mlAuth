@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const { serviceSessionAuthentication } = require("./../middlewares")
 const {
+  createNewApp,
   regenerateAppKeys,
   deleteApp,
   logOut,
@@ -24,6 +25,11 @@ router.post("/", (req, res) => {
     message: "Services Home Page",
   })
 })
+
+/**
+ * @description Receives keys generation requests
+ */
+router.post("/create-app", createNewApp)
 
 /**
  * @description Receives keys generation requests
