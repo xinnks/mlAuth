@@ -1,7 +1,7 @@
-// App Controller
-const {
-  appSalt1,
-  appSalt2,
+// mlAuth client service Controller
+
+const { appSalt1, appSalt2 } = require("./../vars")
+const appDb = require("./../db/apps")
   appsCollection,
   appUrl,
   timeOut,
@@ -20,21 +20,53 @@ const Mail = require("../mail")
 const Session = require("../auth/session")
 
 /**
- * Generates new keys for an app
+ * @description Creates a new App
  */
-async function generateAppKeys(req, res) {
-  let { callback_url: callbackUrl, life_span: lifeSpan, account } = req.body
-  let { appName, email, refId } = account
+async function createNewApp(req, res) {
+  let { account, name, life_span: magicLinkTimeout, callback_url: callbackUrl, production } = req.body
+  let { email, id: ownerId } = account
 
-  let client = await createHexToken(
-    `${email}${appName}${callbackUrl}${nowInSeconds()}`,
-    appSalt2
+  let { client, secret } = generateAppKeys(
+    email,
+    name,
+    callbackUrl
   )
 
-  let nakedSecret = await createHexToken(
-    `${email}${appName}${callbackUrl}${nowInSeconds()}`,
-    appSalt1,
-    32
+  if(await appIsDuplicate(name, ownerId))
+    return res.status(409).json({
+      message: "App with this name already exists"
+    })
+
+  let appData = {
+    ownerId,
+    name,
+    magicLinkTimeout,
+    callbackUrl: callbackUrl || timeOut,
+    production,
+    client,
+    secret: hashPassword(secret, appSalt1),
+  }
+
+  const { status: appCreationStatus, data: appCreationResponse } =
+    await appDb.createApp(appData)
+
+  if (appCreationStatus !== "success")
+    return res.json({
+      message: `Failed to create app. ${appCreationResponse}`,
+    })
+
+  await sendAccountChangesNotification(
+    account.firstName,
+    account.email,
+    account.name
+  )
+
+  appCreationResponse.secret = secret
+  res.status(201).json({
+    app: appCreationResponse,
+    message: "App created",
+  })
+}
   )
 
   let keysData = {
@@ -110,9 +142,23 @@ async function sendAccountChangesNotification(response) {
     response
   )
   return notified
+
+/**
+ * @description Checks if an app with the provided name exists for this user
+ * @param {*} name - Name of the app
+ * @param {*} ownerId - Id of the app's owner
+ */
+async function appIsDuplicate(name, ownerId){
+  const {status, data} = await appDb.findManyApps({
+    name,
+    ownerId
+  })
+
+  return status === "success" && data.length
 }
 
 module.exports = {
+  createNewApp,
   deleteApp,
   generateAppKeys,
   logOut,
