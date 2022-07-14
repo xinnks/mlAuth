@@ -137,11 +137,16 @@ async function logOut(req, res) {
 
 // HELPERS
 
-async function sendAccountChangesNotification(response) {
-  let notified = await new Mail(response.appName).notifyOnAccountChanges(
-    response
-  )
-  return notified
+/**
+ * @description Sends a notification email to a user
+ * @param {String} firstName - User's first name
+ * @param {String} email - Receiver's email
+ * @param {String} appName - Name of app
+ * @returns
+ */
+async function sendAccountChangesNotification(firstName, email, appName) {
+  return new Mail().notifyOnAccountChanges({ firstName, email }, appName)
+}
 
 /**
  * @description Checks if an app with the provided name exists for this user
