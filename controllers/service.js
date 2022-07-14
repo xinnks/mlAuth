@@ -102,19 +102,24 @@ async function createNewApp(req, res) {
 }
 
 /**
- * Deletes an app
+ * @description Deletes an app
  */
-async function deleteApp(req, res) {}
+async function deleteApp(req, res) {
+  const { app_id: appId } = req.body
+  if(!appId) return res.status(422).json({
+      message: "Missing parameters. [app_id]"
+    })
 
-async function authenticateApp(client, secret) {
-  const { status, data: response } = await db.find(appClientIndex, client)
-  if (status !== "success") return result("failure", response)
+  const { status: appDeleteStatus, data } = appDb.deleteApp(appId)
+  if (appDeleteStatus !== "success")
+    return res.status(500).json({
+      message: "Failed to delete app",
+    })
 
-  let { name, callbackUrl, secret: docSecret } = response
-  if (comparePasswordHashes(secret, docSecret, appSalt1))
-    return result("success", { name, callbackUrl, user })
-
-  return result("failure", "Failed to authenticate app")
+  return res.status(204).json({
+    data,
+    message: "App deleted",
+  })
 }
 
 /**
