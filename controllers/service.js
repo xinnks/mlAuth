@@ -149,6 +149,15 @@ async function sendAccountChangesNotification(firstName, email, appName) {
 }
 
 /**
+ * @description fetches app information from the database
+ * @param {String} appId id of the app whose info is to be fechec
+ * @returns {Object|Boolean}
+ */
+async function getAppInformation(appId) {
+  const { status, data } = await appDb.findSingleApp({ id: appId })
+  if (status !== "success") return false
+  return data
+}
  * @description Checks if an app with the provided name exists for this user
  * @param {*} name - Name of the app
  * @param {*} ownerId - Id of the app's owner
