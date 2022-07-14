@@ -145,7 +145,7 @@ async function checkForActiveMagicLink(appRefId, userEmail, timeout) {
   if (status !== "success" || !magicLinks.length) return { exists: false }
 
   const requestUnderTimeout = (element) =>
-    nowInSeconds() - element.data.createdAt < timeout - 20000
+    nowInSeconds() - Date.parse(element.createdAt) < timeout - 20000
 
   let index = magicLinks.findIndex(requestUnderTimeout)
 
