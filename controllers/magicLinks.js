@@ -159,9 +159,14 @@ async function checkMagicLinkValidity({ createdAt, lifeSpan }) {
 }
 
 async function notifyUser({ appName, callbackUrl }, email, token) {
-  let loginUrl = `${callbackUrl}?token=${token}`
-  let sendMagicLink = await new Mail(appName).sendMagicLink(email, loginUrl)
-  return sendMagicLink
+  let loginUrl = `${callbackUrl}?token=${token}`,
+    sent = false
+
+  while (!sent) {
+    sent = new Mail().sendMagicLink(appName, email, loginUrl)
+  }
+
+  return true
 }
 
 module.exports = {
