@@ -19,48 +19,49 @@ const {
 } = require("./../utils")
 const Mail = require("./../mail")
 
+/**
+ * @description Receives a login request from an authenticated client
+ * Sends a magic link to the provided email
+ * Responds to the client with JSON and a 201 status code
+ */
 async function createMagicLink(req, res) {
-  let {
-    account: { appName, callbackUrl, refId },
+  const {
+    app: { name: appName, callbackUrl, id: appId, magicLinkTimeout },
     email,
-    timeout,
   } = req.body
   if (!email)
     return res.status(403).json({
       message: `Missing credentials: [email]`,
     })
 
-  let { exists, data: activeRequest } = await checkForActiveMagicLink(
-      refId,
+  let { exists, data: activeMagicLink } = await checkForActiveMagicLink(
+      appId,
       email,
-      timeout || timeOut
+      magicLinkTimeout || timeOut
     ),
     token
 
   if (exists) {
-    ;({
-      data: { token },
-    } = activeRequest)
+    ;({ token } = activeMagicLink)
 
     await notifyUser({ appName, callbackUrl }, email, token)
 
     return res.json({
-      data: activeRequest,
-      message: "Resent previous login request",
+      data: activeMagicLink,
+      message: "Sent previous login request",
     })
   }
 
-  token = await createHexToken(`${email}${appName}${nowInSeconds()}`, appSalt2)
+  token = createHexToken(`${email}${appName}${nowInSeconds()}`, appSalt2)
 
   let magicLinkData = {
     token,
     email,
-    lifeSpan: parseInt(timeout || timeOut),
-    createdAt: nowInSeconds(),
-    appRefId: parseInt(refId),
+    lifespan: parseInt(magicLinkTimeout || timeOut),
+    appId,
   }
-  const { status: creationStatus, data: creationResponse } = await db.create(
-    magicLinksCollection,
+  const { status: creationStatus, data: creationResponse } =
+    await magicLinksDb.createLink(magicLinkData)
     magicLinkData
   )
 
