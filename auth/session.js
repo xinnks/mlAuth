@@ -3,6 +3,7 @@
 const { nowInSeconds, result } = require("./../utils")
 const { timeOut } = require("./../vars")
 const sessionDb = require("./../db/sessions")
+const usersDb = require("./../db/users")
 
 class Session {
   constructor(token) {
@@ -62,6 +63,14 @@ class Session {
       )
 
     if (updateStatus !== "success") return result("failure", response)
+
+    const { status: userStatus, data: userInfo } = await usersDb.findSingleUser(
+      {
+        id: response.userId,
+      }
+    )
+
+    if (userStatus === "success") response.user = userInfo
 
     return result("success", response)
   }
