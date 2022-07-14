@@ -154,8 +154,8 @@ async function checkForActiveMagicLink(appRefId, userEmail, timeout) {
   return { exists: true, data: magicLinks[index] }
 }
 
-async function checkMagicLinkValidity({ createdAt, lifeSpan }) {
-  return nowInSeconds() - createdAt < lifeSpan - 10000
+async function checkMagicLinkValidity({ createdAt, lifespan }) {
+  return nowInSeconds() - Date.parse(createdAt) < lifespan - 10000
 }
 
 async function notifyUser({ appName, callbackUrl }, email, token) {
