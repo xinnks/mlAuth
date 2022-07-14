@@ -158,6 +158,30 @@ async function getAppInformation(appId) {
   if (status !== "success") return false
   return data
 }
+
+/**
+ * @description Generates "client" and "secret" keys
+ * @param {String} email user's email
+ * @param {String} appName name of the app which the keys are to be generated for
+ * @param {String} callbackUrl app's callback url
+ * @returns {Object}
+ */
+function generateAppKeys(email, appName, callbackUrl) {
+  if (!email || !appName || !callbackUrl) throw new Error("Parameters missing")
+
+  const client = createHexToken(
+      `${email}${appName}${callbackUrl}${nowInSeconds()}`,
+      appSalt2
+    ),
+    secret = createHexToken(
+      `${email}${appName}${callbackUrl}${nowInSeconds()}`,
+      appSalt1,
+      32
+    )
+  return { client, secret }
+}
+
+/**
  * @description Checks if an app with the provided name exists for this user
  * @param {*} name - Name of the app
  * @param {*} ownerId - Id of the app's owner
