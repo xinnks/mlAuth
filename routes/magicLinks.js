@@ -17,26 +17,26 @@ router.use(Cors(corsOptions))
 /*
  magic link index route
 */
-router.post("/", (req, res) => {
+router.post("/", (_req, res) => {
   res.json({
     message: "Magic Links Home Page",
   })
 })
 
 /**
- * This route receives a login request from an authenticated client
- * Sends a magic link to the provided email
- * Responds to the client with JSON and a 201 status code
+ * @description This route receives login requests
  * */
 router.post("/login", createMagicLink)
 
 /**
- * This route verifies a magic link's token to authenticated a user into an app/service
+ * @description This route receives magic links verification requests
  * */
 router.post("/verify", verifyMagicLink)
 
-// use the router and 401 anything falling through
-router.use("/ml", router, (req, res) => {
+/**
+ * @description Use the router and return 401 responses to anything falling through
+ */
+router.use("/ml", router, (_req, res) => {
   res.sendStatus(401)
 })
 
