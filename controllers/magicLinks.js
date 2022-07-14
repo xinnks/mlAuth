@@ -137,11 +137,11 @@ async function verifyMagicLink(req, res) {
 
 /// HELPERS
 
-async function checkForActiveMagicLink(appRefId, userEmail, timeout) {
-  let { status, data: magicLinks } = await db.findMany(
-    magicLinksEmailIndex,
-    userEmail
-  )
+async function checkForActiveMagicLink(appId, authUserEmail, timeout) {
+  let { status, data: magicLinks } = await magicLinksDb.findLinks({
+    email: authUserEmail,
+    appId,
+  })
   if (status !== "success" || !magicLinks.length) return { exists: false }
 
   const requestUnderTimeout = (element) =>
