@@ -43,12 +43,12 @@ class Session {
       })
     if (sessionStatus !== "success" || !sessionData)
       return result("failure", "Unknown session")
-    let { updatedAt, lifeSpan, id } = sessionData
 
-    if (nowInSeconds() - Date.parse(updatedAt) > lifeSpan - 10000)
-      return result("failure", "Session expired")
+    let { updatedAt, lifespan, id } = sessionData
 
-    return this.refresh(id)
+    return nowInSeconds() - Date.parse(updatedAt) < lifespan - 10000
+      ? this.refresh(id)
+      : result("failure", "Session expired")
   }
 
   /**
