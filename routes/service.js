@@ -14,8 +14,8 @@ const corsOptions = {
 }
 
 // middlewares
-router.use(serviceSessionAuthentication)
 router.use(Cors(corsOptions))
+router.use(serviceSessionAuthentication)
 
 /*
  service creation route

@@ -11,8 +11,8 @@ const {
 } = require("./../controllers/magicLinks")
 
 // middlewares
-router.use(appAuthentication)
 router.use(Cors(corsOptions))
+router.use(appAuthentication)
 
 /*
  magic link index route
