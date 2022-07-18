@@ -30,7 +30,7 @@ async function createMagicLink(req, res) {
     email,
   } = req.body
   if (!email)
-    return res.status(403).json({
+    return res.status(422).json({
       message: `Missing credentials: [email]`,
     })
 
@@ -88,6 +88,7 @@ async function verifyMagicLink(req, res) {
 
   if (!token)
     return res.status(403).json({
+    return res.status(401).json({
       message: "Missing credentials. [token]",
     })
 

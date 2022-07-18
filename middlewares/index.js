@@ -11,7 +11,7 @@ async function serviceSessionAuthentication(req, res, next) {
   let { sessionToken } = req.body
 
   if (!sessionToken)
-    return res.status(403).json({
+    return res.status(401).json({
       message: "Authentication failed",
     })
 
@@ -20,7 +20,7 @@ async function serviceSessionAuthentication(req, res, next) {
   ).verify()
 
   if (sessionStatus !== "success")
-    return res.status(203).json({
+    return res.status(401).json({
       message: `Encountered error trying to verify session. [${sessionData}]`,
     })
 
