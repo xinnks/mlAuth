@@ -13,12 +13,11 @@ function BadRequestException(reason) {
 }
 
 function createHexToken(text, salt, length = null) {
-  let result = crypto
+  return crypto
     .createHash("sha256")
     .update(`${Date.now()}${text.replaceAll(" ")}`, "utf-8")
     .update(crypto.createHash("sha256").update(salt, "utf-8").digest())
     .digest("hex")
-  return length && length > 0 ? result.slice(0, length) : result
 }
 
 function hashPassword(password, salt) {
@@ -72,5 +71,5 @@ module.exports = {
   comparePasswordHashes,
   result,
   nowInSeconds,
-  getMissingParameters
+  getMissingParameters,
 }
