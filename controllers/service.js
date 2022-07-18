@@ -67,23 +67,52 @@ async function createNewApp(req, res) {
     message: "App created",
   })
 }
+
+/**
+ * @description Regenerates App's keys
+ */
+async function regenerateAppKeys(req, res) {
+  let { account, app_id: appId } = req.body
+  let { email } = account
+
+  let appInfo = await getAppInformation(appId)
+
+  if (!appInfo)
+    return res.status(404).json({
+      message: "App not found",
+    })
+
+  let { client, secret } = generateAppKeys(
+    email,
+    appInfo.name,
+    appInfo.callbackUrl
   )
 
-  let keysData = {
-    lifeSpan: lifeSpan || timeOut,
-    callbackUrl,
+  let updatedKeys = {
     client,
-    secret: hashPassword(nakedSecret, appSalt1),
-    updatedAt: nowInSeconds(),
+    secret: hashPassword(secret, appSalt1),
   }
 
-  const { status: updateStatus, data: updateResponse } = await db.update(
-    appsCollection,
-    refId,
-    keysData
+  const { status: appUpdateStatus, data: appUpdateResponse } =
+    await appDb.updateApp(appId, updatedKeys)
+
+  if (appUpdateStatus !== "success")
+    return res.json({
+      message: `Failed to change app keys. ${updateResponse}`,
+    })
+
+  await sendAccountChangesNotification(
+    account.firstName,
+    account.email,
+    appInfo.name
   )
 
-  if (updateStatus !== "success")
+  appUpdateResponse.secret = secret
+  res.json({
+    app: appUpdateResponse,
+    message: "Updated app keys",
+  })
+}
     return res.json({
       message: "Failed to add app keys. " + updateResponse,
     })
