@@ -79,7 +79,9 @@ async function createMagicLink(req, res) {
 }
 
 /**
- * Verifies a magic link
+ * @description Receives a login verification request
+ * Sends a magic link to the provided email
+ * Responds to the client with JSON and a 201 status code
  */
 async function verifyMagicLink(req, res) {
   let { account, token } = req.body,

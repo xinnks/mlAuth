@@ -3,7 +3,7 @@ const prisma = require("./")
 
 /**
  * Creates a magic link
- * @param {Object} {appId, id, token, lifespan, app, createdAt}
+ * @param {Object} data - Object containing these parameters {appId, id, token, lifespan, app, createdAt}
  * @returns {Object}
  */
 async function createLink(data) {
@@ -37,8 +37,8 @@ async function findLink(searchQuery, returnFields = null) {
 
 /**
  * @description Finds multiple magic links
- * @param {Object} searchQuery
- * @param {Object} returnFields
+ * @param {Object} searchQuery - Attributes to query
+ * @param {Object} returnFields - fields to be returned
  * @returns {Object}
  */
 async function findLinks(searchQuery, returnFields = null) {
@@ -54,8 +54,8 @@ async function findLinks(searchQuery, returnFields = null) {
 }
 
 /**
- * Deletes a magic link
- * @param {String} token
+ * @description Deletes a magic link
+ * @param {String} id - Magic link id
  * @returns {Object}
  */
 async function deleteLink(id) {

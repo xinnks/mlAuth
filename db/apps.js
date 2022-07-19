@@ -3,7 +3,7 @@ const prisma = require("./")
 
 /**
  * Creates a new app
- * @param {Object} ({ ownerId, id, name, secret, client, callbackUrl, magicLinkTimeout, production, owner, magicLinks, createdAt })
+ * @param {Object} data - Object containing these parameters { email, firstName, lastName, verified, verificationToken }
  * @returns {Object}
  */
 async function createApp(data) {
@@ -19,8 +19,8 @@ async function createApp(data) {
 
 /**
  * Finds a single app
- * @param {Object} searchQuery
- * @param {Object} returnFields
+ * @param {Object} searchQuery - Parameters to query for
+ * @param {Object} returnFields - Extra models to return
  * @returns {Object}
  */
 async function findSingleApp(searchQuery, returnFields = null) {
@@ -37,8 +37,8 @@ async function findSingleApp(searchQuery, returnFields = null) {
 
 /**
  * Finds multiple apps
- * @param {Object} searchQuery
- * @param {Object} returnFields
+ * @param {Object} searchQuery - Parameters to query for
+ * @param {Object} returnFields - Extra models to return
  * @returns {Object}
  */
 async function findManyApps(searchQuery, returnFields = null) {
