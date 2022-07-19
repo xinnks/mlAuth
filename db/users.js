@@ -3,7 +3,7 @@ const { result } = require("../utils")
 
 /**
  * @description Creates a new user
- * @param {Object} ({ email, firstName, lastName, verified, apps, sessions, updatedAt })
+ * @param {Object} data - An object containing some or all of the following attributes { email, firstName, lastName, verified, apps, sessions, updatedAt }
  * @returns {Object}
  */
 async function createUser(data) {
@@ -81,7 +81,7 @@ async function updateUser(id, changes) {
 
 /**
  * @description Deletes a user
- * @param {String} id
+ * @param {String} id - User's id
  * @returns {Object}
  */
 async function deleteUser(id) {
