@@ -39,7 +39,7 @@ router.post("/generate-keys", regenerateAppKeys)
 /**
  * @description Receives app deletion requests
  */
-router.get("/delete", deleteApp)
+router.post("/delete-app", deleteApp)
 
 /**
  * @description Receives logout requests
