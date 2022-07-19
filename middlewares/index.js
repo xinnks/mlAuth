@@ -21,7 +21,7 @@ async function serviceSessionAuthentication(req, res, next) {
 
   if (sessionStatus !== "success")
     return res.status(401).json({
-      message: `Encountered error trying to verify session. [${sessionData}]`,
+      message: sessionData,
     })
 
   let { user } = sessionData
