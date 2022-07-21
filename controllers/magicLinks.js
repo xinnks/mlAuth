@@ -8,7 +8,7 @@ const {
   mlauthServiceClient,
 } = require("./../vars")
 const Session = require("./../auth/session")
-const Database = require("./../db")
+const magicLinksDb = require("./../db/magic-links")
 const db = new Database()
 const {
   hashPassword,
@@ -94,10 +94,10 @@ async function verifyMagicLink(req, res) {
       message: "Missing credentials. [token]",
     })
 
-  const { status: findStatus, data: magicLinkData } = await db.find(
-    magicLinkTokenIndex,
-    token
-  )
+  const { status: findStatus, data: magicLinkData } =
+    await magicLinksDb.findLink({
+      token: magicLinkToken,
+    })
 
   if (findStatus !== "success" || !magicLinkData)
     return res.status(401).json({
@@ -131,7 +131,7 @@ async function verifyMagicLink(req, res) {
     finalMessage = "Session started"
   }
 
-  await db.delete(magicLinksCollection, magicLinkData.refId)
+  await magicLinksDb.deleteLink(magicLinkData.id)
 
   res.json({
     ...finalData,
