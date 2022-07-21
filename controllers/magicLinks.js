@@ -9,8 +9,8 @@ const {
 } = require("./../vars")
 const Session = require("./../auth/session")
 const magicLinksDb = require("./../db/magic-links")
-const db = new Database()
-const {
+const appsDb = require("./../db/apps")
+const usersDb = require("./../db/users")
   hashPassword,
   createHexToken,
   nowInSeconds,
@@ -114,20 +114,48 @@ async function verifyMagicLink(req, res) {
       message: "Magic link has expired",
     })
 
+  delete account.verificationToken
+  finalData.account = account
+
+  // Gets user data based on log in request email
   // starts a login session for the mlAuth front-end client
   if (account.client === mlauthServiceClient) {
-    let { status: sessionStatus, data: sessionData } = await new Session(
-      token
-    ).create(account.refId, account.lifeSpan || timeOut)
+  if (app.client === mlauthServiceClient) {
+    let { status: fetchUserStatus, data: userData } =
+      await usersDb.findSingleUser({
+        email: magicLinkData.email,
+      })
+    if (fetchUserStatus !== "success")
+      return res.status(404).json({
+        message: "User not found",
+      })
 
-    if (sessionStatus !== "success")
-      return res.json({
+    let sessionToken = hashPassword(magicLinkToken, appSalt2)
+    let { status: sessionInitiateStatus, data: sessionData } =
+      await new Session(sessionToken).create(userData.id, timeOut)
+
+    if (sessionInitiateStatus !== "success")
+      return res.status(500).json({
         data: null,
         message: "Failed to start session",
       })
-    delete sessionData.appRefId
+
+    finalData.apps = []
+    let { status: appsFetchStatus, data: fetchedApps } =
+      await appsDb.findManyApps({
+        ownerId: userData.id,
+      })
+
+    if (appsFetchStatus == "success" && fetchedApps.length)
+      finalData.apps = fetchedApps.map((app) => {
+        delete app.secret
+        return app
+      })
+
+    delete sessionData.appId
+    delete userData.verificationToken
     finalData.session = sessionData
-    finalData.account = account
+    finalData.account = userData
     finalMessage = "Session started"
   }
 
