@@ -231,7 +231,7 @@ async function appIsDuplicate(name, ownerId){
 
 module.exports = {
   createNewApp,
+  regenerateAppKeys,
   deleteApp,
-  generateAppKeys,
   logOut,
 }
