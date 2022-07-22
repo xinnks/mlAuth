@@ -18,7 +18,7 @@ function basicAuthentication(request) {
     return result("failure", "Malformed authorization header.")
   }
 
-  const decoded = atob(encoded)
+  const decoded = Buffer.from(encoded, "base64").toString("utf8")
 
   const index = decoded.indexOf(":")
 
