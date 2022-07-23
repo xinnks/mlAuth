@@ -23,18 +23,20 @@ const Session = require("../auth/session")
  * @description Creates a new App
  */
 async function createNewApp(req, res) {
-  let { account, name, life_span: magicLinkTimeout, callback_url: callbackUrl, production } = req.body
+  let {
+    account,
+    name,
+    life_span: magicLinkTimeout,
+    callback_url: callbackUrl,
+    production,
+  } = req.body
   let { email, id: ownerId } = account
 
-  let { client, secret } = generateAppKeys(
-    email,
-    name,
-    callbackUrl
-  )
+  let { client, secret } = generateAppKeys(email, name, callbackUrl)
 
-  if(await appIsDuplicate(name, ownerId))
+  if (await appIsDuplicate(name, ownerId))
     return res.status(409).json({
-      message: "App with this name already exists"
+      message: "App with this name already exists",
     })
 
   let appData = {
@@ -127,9 +129,9 @@ async function updateAppInformation(req, res) {
     app_id: appId,
   } = req.body
 
-  if(!appId)
+  if (!appId)
     return res.status(422).json({
-      message: "Missing parameters. [ap_id]"
+      message: "Missing parameters. [ap_id]",
     })
 
   let appInfo = await getAppInformation(appId)
@@ -177,8 +179,9 @@ async function updateAppInformation(req, res) {
  */
 async function deleteApp(req, res) {
   const { app_id: appId } = req.body
-  if(!appId) return res.status(422).json({
-      message: "Missing parameters. [app_id]"
+  if (!appId)
+    return res.status(422).json({
+      message: "Missing parameters. [app_id]",
     })
 
   const { status: appDeleteStatus, data } = appDb.deleteApp(appId)
@@ -262,10 +265,10 @@ function generateAppKeys(email, appName, callbackUrl) {
  * @param {*} name - Name of the app
  * @param {*} ownerId - Id of the app's owner
  */
-async function appIsDuplicate(name, ownerId){
-  const {status, data} = await appDb.findManyApps({
+async function appIsDuplicate(name, ownerId) {
+  const { status, data } = await appDb.findManyApps({
     name,
-    ownerId
+    ownerId,
   })
 
   return status === "success" && data.length
