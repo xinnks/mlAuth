@@ -226,12 +226,12 @@ async function sendAccountChangesNotification(firstName, email, appName) {
 
 /**
  * @description fetches app information from the database
- * @param {String} appId id of the app whose info is to be fechec
+ * @param {String} appId id of the app whose info is to be fetched
  * @returns {Object|Boolean}
  */
 async function getAppInformation(appId) {
   const { status, data } = await appDb.findSingleApp({ id: appId })
-  if (status !== "success") return false
+  if (status !== "success") return null
   return data
 }
 
