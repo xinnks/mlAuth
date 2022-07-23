@@ -2,9 +2,9 @@
 
 const { appSalt1, appSalt2 } = require("./../vars")
 const appDb = require("./../db/apps")
-  appsCollection,
-  appUrl,
-  timeOut,
+const { hashPassword, createHexToken, nowInSeconds } = require("./../utils")
+const Mail = require("./../mail")
+const Session = require("./../auth/session")
   appClientIndex,
 } = require("../vars")
 const Database = require("../db/index.old")
