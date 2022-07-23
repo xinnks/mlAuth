@@ -113,15 +113,57 @@ async function regenerateAppKeys(req, res) {
     message: "Updated app keys",
   })
 }
-    return res.json({
-      message: "Failed to add app keys. " + updateResponse,
+
+/**
+ * @description Updates an app's information
+ */
+async function updateAppInformation(req, res) {
+  let {
+    name,
+    production,
+    callback_url: callbackUrl,
+    life_span: lifeSpan,
+    account,
+    app_id: appId,
+  } = req.body
+
+  if(!appId)
+    return res.status(422).json({
+      message: "Missing parameters. [ap_id]"
     })
 
-  await sendAccountChangesNotification(updateResponse.data)
+  let appInfo = await getAppInformation(appId)
 
+  if (!appInfo)
+    return res.status(404).json({
+      message: "App not found",
+    })
+
+  let updatedInfo = {
+    name: name || appInfo.name,
+    production: production ? !!production : appInfo.production,
+    magicLinkTimeout: lifeSpan || appInfo.magicLinkTimeout,
+    callbackUrl: callbackUrl || appInfo.callbackUrl,
+  }
+
+  const { status: appUpdateStatus, data: appUpdateResponse } =
+    await appDb.updateApp(appId, updatedInfo)
+
+  if (appUpdateStatus !== "success")
+    return res.json({
+      message: "Failed to update app" + appUpdateResponse,
+    })
+
+  await sendAccountChangesNotification(
+    account.firstName,
+    account.email,
+    appInfo
+  )
+
+  delete appUpdateResponse.secret
   res.json({
-    keys: {
-      client,
+    app: appUpdateResponse,
+    message: "App updated",
       secret: nakedSecret,
       callbackUrl,
       lifeSpan: lifeSpan || timeOut,
@@ -232,6 +274,7 @@ async function appIsDuplicate(name, ownerId){
 module.exports = {
   createNewApp,
   regenerateAppKeys,
+  updateAppInformation,
   deleteApp,
   logOut,
 }

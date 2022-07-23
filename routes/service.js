@@ -4,6 +4,7 @@ const { serviceSessionAuthentication } = require("./../middlewares")
 const {
   createNewApp,
   regenerateAppKeys,
+  updateAppInformation,
   deleteApp,
   logOut,
 } = require("./../controllers/service")
@@ -35,6 +36,11 @@ router.post("/create-app", createNewApp)
  * @description Receives keys generation requests
  */
 router.post("/generate-keys", regenerateAppKeys)
+
+/**
+ * @description Receives app update requests
+ */
+router.post("/update-app", updateAppInformation)
 
 /**
  * @description Receives app deletion requests
