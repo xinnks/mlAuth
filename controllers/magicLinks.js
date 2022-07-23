@@ -4,19 +4,13 @@ const {
   appUrl,
   appSalt2,
   timeOut,
-  magicLinksEmailIndex,
   mlauthServiceClient,
 } = require("./../vars")
 const Session = require("./../auth/session")
 const magicLinksDb = require("./../db/magic-links")
 const appsDb = require("./../db/apps")
 const usersDb = require("./../db/users")
-  hashPassword,
-  createHexToken,
-  nowInSeconds,
-  comparePasswordHashes,
-  result,
-} = require("./../utils")
+const { createHexToken, nowInSeconds, hashPassword } = require("./../utils")
 const Mail = require("./../mail")
 
 /**
