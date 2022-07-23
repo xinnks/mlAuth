@@ -5,19 +5,6 @@ const appDb = require("./../db/apps")
 const { hashPassword, createHexToken, nowInSeconds } = require("./../utils")
 const Mail = require("./../mail")
 const Session = require("./../auth/session")
-  appClientIndex,
-} = require("../vars")
-const Database = require("../db/index.old")
-const db = new Database()
-const {
-  hashPassword,
-  createHexToken,
-  nowInSeconds,
-  comparePasswordHashes,
-  result,
-} = require("../utils")
-const Mail = require("../mail")
-const Session = require("../auth/session")
 
 /**
  * @description Creates a new App
