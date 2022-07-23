@@ -28,6 +28,11 @@ async function createMagicLink(req, res) {
       message: `Missing credentials: [email]`,
     })
 
+  if (!(await checkAccountEmail(email)))
+    return res.status(404).json({
+      message: "Account doesn't exist!",
+    })
+
   let { exists, data: activeMagicLink } = await checkForActiveMagicLink(
       appId,
       email,
