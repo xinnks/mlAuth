@@ -184,6 +184,19 @@ async function checkMagicLinkValidity({ createdAt, lifespan }) {
   return nowInSeconds() - Date.parse(createdAt) < lifespan - 10000
 }
 
+/**
+ * @description Checks if email belongs to a registered user
+ * @param {String} email - Account email
+ * */
+async function checkAccountEmail(email) {
+  let { status: fetchUserStatus, data: userData } =
+    await usersDb.findSingleUser({
+      email,
+    })
+
+  return fetchUserStatus === "success" && userData
+}
+
 async function notifyUser({ appName, callbackUrl }, email, token) {
   let loginUrl = `${callbackUrl}?token=${token}`,
     sent = false
