@@ -20,7 +20,7 @@ const Mail = require("./../mail")
  */
 async function createMagicLink(req, res) {
   const {
-    app: { name: appName, callbackUrl, id: appId, magicLinkTimeout },
+    app: { name: appName, callbackUrl, id: appId, magicLinkTimeout, client: appClientKey },
     email,
   } = req.body
   if (!email)
@@ -28,10 +28,14 @@ async function createMagicLink(req, res) {
       message: `Missing credentials: [email]`,
     })
 
-  if (!(await checkAccountEmail(email)))
-    return res.status(404).json({
-      message: "Account doesn't exist!",
-    })
+  // If visiting mlAuth's client site
+  // User must be registered to proceed with making a magic link request
+  if (appClientKey === mlauthServiceClient) {
+    if (!(await checkAccountEmail(email)))
+      return res.status(404).json({
+        message: "Account doesn't exist!",
+      })
+  }
 
   let { exists, data: activeMagicLink } = await checkForActiveMagicLink(
       appId,
