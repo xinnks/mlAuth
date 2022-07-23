@@ -153,11 +153,6 @@ async function updateAppInformation(req, res) {
   res.json({
     app: appUpdateResponse,
     message: "App updated",
-      secret: nakedSecret,
-      callbackUrl,
-      lifeSpan: lifeSpan || timeOut,
-    },
-    message: "Added app keys",
   })
 }
 
