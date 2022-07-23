@@ -207,6 +207,7 @@ async function logOut(req, res) {
     })
 
   res.json({
+    data,
     message: "Logged out",
   })
 }
