@@ -197,7 +197,7 @@ async function deleteApp(req, res) {
  * @description Log's out users from mlAuth's website session
  */
 async function logOut(req, res) {
-  let { token: sessionToken } = req.body
+  let { sessionToken } = req.body
 
   let { status, data } = await new Session(sessionToken).delete()
 
