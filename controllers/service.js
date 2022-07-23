@@ -251,8 +251,7 @@ function generateAppKeys(email, appName, callbackUrl) {
     ),
     secret = createHexToken(
       `${email}${appName}${callbackUrl}${nowInSeconds()}`,
-      appSalt1,
-      32
+      appSalt1
     )
   return { client, secret }
 }
