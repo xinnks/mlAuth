@@ -87,11 +87,11 @@ async function createMagicLink(req, res) {
  * Responds to the client with JSON and a 201 status code
  */
 async function verifyMagicLink(req, res) {
-  let { account, token } = req.body,
-    finalData,
-    finalMessage = "Magic link is active"
+  let finalData,
+    finalMessage = "Magic link is active",
+    { app, account, token: magicLinkToken } = req.body
 
-  if (!token)
+  if (!magicLinkToken)
     return res.status(403).json({
     return res.status(401).json({
       message: "Missing credentials. [token]",
