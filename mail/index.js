@@ -75,7 +75,9 @@ class Mail {
 
   /**
    * @description This function sends a service account verification email
-   * @param { Object } {firstName, email} => User's first name and email
+   * @param { Object } user => User's data
+   * @param { String } user.firstName => User's first name
+   * @param { String } user.email => User's email
    * @param { String } url => Account verification url
    * @returns { Boolean }
    **/
@@ -106,7 +108,9 @@ class Mail {
 
   /**
    * @description This function sends a notification email to an account on account details changes
-   * @param { Object } {firstName, email} => Account user's first name and email
+   * @param { Object } user => User's data
+   * @param { String } user.firstName => User's first name
+   * @param { String } user.email => User's email
    * @param { String } appName => Name of the app that changes have been made to
    * @returns { Boolean }
    **/

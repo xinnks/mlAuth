@@ -57,7 +57,7 @@ function result(status, data) {
 
 /**
  * @description Returns current time in seconds
- * @returns {Integer}
+ * @returns {Number}
  */
 function nowInSeconds() {
   return Date.now()
