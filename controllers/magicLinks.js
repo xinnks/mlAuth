@@ -65,8 +65,6 @@ async function createMagicLink(req, res) {
   }
   const { status: creationStatus, data: creationResponse } =
     await magicLinksDb.createLink(magicLinkData)
-    magicLinkData
-  )
 
   if (creationStatus !== "success")
     return res.status(401).json({
@@ -92,7 +90,6 @@ async function verifyMagicLink(req, res) {
     { app, account, token: magicLinkToken } = req.body
 
   if (!magicLinkToken)
-    return res.status(403).json({
     return res.status(401).json({
       message: "Missing credentials. [token]",
     })
@@ -122,7 +119,6 @@ async function verifyMagicLink(req, res) {
 
   // Gets user data based on log in request email
   // starts a login session for the mlAuth front-end client
-  if (account.client === mlauthServiceClient) {
   if (app.client === mlauthServiceClient) {
     let { status: fetchUserStatus, data: userData } =
       await usersDb.findSingleUser({
@@ -219,5 +215,5 @@ async function notifyUser({ appName, callbackUrl }, email, token) {
 
 module.exports = {
   createMagicLink,
-  verifyMagicLink
+  verifyMagicLink,
 }

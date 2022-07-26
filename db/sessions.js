@@ -36,8 +36,8 @@ async function findSession(searchQuery, returnFields = null) {
 }
 
 /**
- * @description Updates session data
- * @param {String} id - Token id
+ * @description Updates a session's data
+ * @param {Object} id - Token id
  * @param {Object} changes - Changes to be made
  * @returns {Object}
  */

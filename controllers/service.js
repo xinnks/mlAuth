@@ -167,10 +167,11 @@ async function deleteApp(req, res) {
     })
 
   const exists = await getAppInformation(appId)
-  if(!exists)
+  if (!exists)
     return res.status(404).json({
-      message: "App doesn't exist"
+      message: "App doesn't exist",
     })
+
   const { status: appDeleteStatus, data } = await appDb.deleteApp(appId)
   if (appDeleteStatus !== "success")
     return res.status(500).json({

@@ -13,7 +13,7 @@ class Session {
   /**
    * @description Creates a new session
    * @param {String} userId - Id of user the session belongs to
-   * @param {Integer} lifeSpan - Lifespan of the session to be created
+   * @param {Number} lifeSpan - Lifespan of the session to be created
    * @returns {Object}
    */
   async create(userId, lifeSpan) {

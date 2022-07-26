@@ -24,8 +24,8 @@ app.use(express.urlencoded({ extended: true }))
 app.options("*", corsPass)
 
 /*
-* The index route
-*/
+ * The index route
+ */
 app.get("/", (request, response) => {
   response.status(200).json({
     status: "success",
