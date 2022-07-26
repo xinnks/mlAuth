@@ -8,6 +8,9 @@ const {
   deleteApp,
   logOut,
 } = require("./../controllers/service")
+const {
+  updateAccountInformation,
+} = require("./../controllers/account")
 const Cors = require("cors")
 const corsOptions = {
   origin: "*",
@@ -37,6 +40,10 @@ router.post("/create-app", createNewApp)
  */
 router.post("/generate-keys", regenerateAppKeys)
 
+/**
+ * @description Receives user update requests
+ */
+router.post("/update-account", updateAccountInformation)
 /**
  * @description Receives app update requests
  */
