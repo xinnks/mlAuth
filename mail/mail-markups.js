@@ -156,7 +156,7 @@ function accountChangesMarkup(firstName, appName) {
         </p>
 
         <p class="p-4 m-4 width-full text-xl">
-          Thanks, ${appName} Team.
+          Thanks, ${mlAuthService} Team.
         </p>
 
       </main>
