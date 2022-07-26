@@ -11,10 +11,8 @@ async function createUser(data) {
     const response = await prisma.user.create({
       data,
     })
-    console.log(response)
     return result("success", response)
   } catch (error) {
-    console.log(error)
     return result("error", error)
   }
 }
@@ -31,10 +29,8 @@ async function findSingleUser(searchQuery, returnFields = null) {
       where: searchQuery,
       include: returnFields,
     })
-    console.log(response)
     return result("success", response)
   } catch (error) {
-    console.log(error)
     return result("error", error)
   }
 }
@@ -51,10 +47,8 @@ async function findManyUsers(searchQuery, returnFields = null) {
       where: searchQuery,
       include: returnFields,
     })
-    console.log(response)
     return result("success", response)
   } catch (error) {
-    console.log(error)
     return result("error", error)
   }
 }
@@ -71,10 +65,8 @@ async function updateUser(id, changes) {
       where: { id },
       data: changes,
     })
-    console.log(response)
     return result("success", response)
   } catch (error) {
-    console.log(error)
     return result("error", error)
   }
 }
@@ -89,10 +81,8 @@ async function deleteUser(id) {
     const response = await prisma.user.delete({
       where: { id },
     })
-    console.log(response)
     return result("success", response)
   } catch (error) {
-    console.log(error)
     return result("error", error)
   }
 }
