@@ -108,7 +108,7 @@ async function verifyMagicLink(req, res) {
     })
 
   finalData = {
-    magicLink: magicLinkData.data,
+    magicLink: magicLinkData,
   }
 
   if (!checkMagicLinkValidity(magicLinkData))
