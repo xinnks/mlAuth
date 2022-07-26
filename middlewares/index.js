@@ -59,7 +59,7 @@ async function appAuthentication(req, res, next) {
 
   let { secret: storedSecret } = appInfo
   if (!comparePasswordHashes(secret, storedSecret, appSalt1))
-    return res.json({
+    return res.status(401).json({
       message: "Wrong credentials. Failed to authenticate service",
     })
 
