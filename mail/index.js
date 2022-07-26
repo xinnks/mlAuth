@@ -11,12 +11,9 @@ const { appFromEmail, mlAuthService } = require("./../vars")
 
 class Mail {
   constructor() {
+    const keys = Buffer.from(`${process.env.MAILJET_API_KEY}:${process.env.MAILJET_API_SECRET}`, "utf8")
     this.headers = {
-      Authorization:
-        "Basic " +
-        btoa(
-          `${process.env.MAILJET_API_KEY}:${process.env.MAILJET_API_SECRET}`
-        ),
+      Authorization: `Basic ${keys.toString("base64")}`,
       "Content-Type": "application/json",
     }
   }
