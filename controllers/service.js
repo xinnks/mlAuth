@@ -2,8 +2,7 @@
 
 const { appSalt1, appSalt2 } = require("./../vars")
 const appDb = require("./../db/apps")
-const { hashPassword, createHexToken, nowInSeconds } = require("./../utils")
-const Mail = require("./../mail")
+const { hashPassword, createHexToken, nowInSeconds, sendAccountChangesNotification } = require("./../utils")
 const Session = require("./../auth/session")
 
 /**
@@ -204,17 +203,6 @@ async function logOut(req, res) {
 }
 
 // HELPERS
-
-/**
- * @description Sends a notification email to a user
- * @param {String} firstName - User's first name
- * @param {String} email - Receiver's email
- * @param {String} appName - Name of app
- * @returns
- */
-async function sendAccountChangesNotification(firstName, email, appName) {
-  return new Mail().notifyOnAccountChanges({ firstName, email }, appName)
-}
 
 /**
  * @description fetches app information from the database

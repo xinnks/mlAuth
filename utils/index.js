@@ -1,4 +1,5 @@
 const crypto = require("crypto")
+const Mail = require("./../mail");
 
 function UnauthorizedException(reason) {
   this.status = 401
@@ -63,6 +64,17 @@ function nowInSeconds() {
   return Date.now()
 }
 
+/**
+ * @description Sends a notification email to a user
+ * @param {String} firstName - User's first name
+ * @param {String} email - Receiver's email
+ * @param {String|null} appName - Name of app
+ * @returns
+ */
+async function sendAccountChangesNotification(firstName, email, appName= null) {
+  return new Mail().notifyOnAccountChanges({ firstName, email }, appName)
+}
+
 module.exports = {
   UnauthorizedException,
   BadRequestException,
@@ -72,4 +84,5 @@ module.exports = {
   result,
   nowInSeconds,
   getMissingParameters,
+  sendAccountChangesNotification,
 }
