@@ -120,7 +120,7 @@ function verifyAccount(firstName, url) {
   `)
 }
 
-function accountChangesMarkup(firstName, appName) {
+function accountChangesMarkup(firstName, appName = null) {
   return new String(`
   <!DOCTYPE html>
   <html>
@@ -148,7 +148,7 @@ function accountChangesMarkup(firstName, appName) {
         </p>
 
         <p class="p-4 m-4 width-full text-xl">
-          Changes have been made to your ${appName} service account.
+          Changes have been made to your ${appName ? appName + ' app' : 'account'}.
         </p>
 
         <p class="p-4 m-4 width-full text-xl">

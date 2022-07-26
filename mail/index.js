@@ -108,10 +108,10 @@ class Mail {
    * @param { Object } user => User's data
    * @param { String } user.firstName => User's first name
    * @param { String } user.email => User's email
-   * @param { String } appName => Name of the app that changes have been made to
+   * @param { String|null } appName => Name of the app that changes have been made to
    * @returns { Boolean }
    **/
-  async notifyOnAccountChanges({ firstName, email }, appName) {
+  async notifyOnAccountChanges({ firstName, email }, appName = null) {
     // return true
     const data = {
       Messages: [
