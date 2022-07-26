@@ -104,7 +104,7 @@ async function verifyMagicLink(req, res) {
 
   if (findStatus !== "success" || !magicLinkData)
     return res.status(401).json({
-      message: "Unknown token",
+      message: "Unknown magic link",
     })
 
   finalData = {
