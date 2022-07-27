@@ -130,7 +130,7 @@ async function verifyMagicLink(req, res) {
       await usersDb.findSingleUser({
         email: magicLinkData.email,
       })
-    if (fetchUserStatus !== "success")
+    if (fetchUserStatus !== "success" || !userData)
       return res.status(404).json({
         message: "User not found",
       })
