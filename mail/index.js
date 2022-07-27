@@ -12,7 +12,10 @@ const { appFromEmail, mlAuthService } = require("./../vars")
 
 class Mail {
   constructor() {
-    const keys = Buffer.from(`${process.env.MAILJET_API_KEY}:${process.env.MAILJET_API_SECRET}`, "utf8")
+    const keys = Buffer.from(
+      `${process.env.MAILJET_API_KEY}:${process.env.MAILJET_API_SECRET}`,
+      "utf8"
+    )
     this.headers = {
       Authorization: `Basic ${keys.toString("base64")}`,
       "Content-Type": "application/json",
@@ -25,7 +28,6 @@ class Mail {
    * @returns { Boolean }
    **/
   async sendEmail(data) {
-    // return true
     try {
       await fetch(`https://api.mailjet.com/v3.1/send`, {
         method: "POST",
@@ -47,7 +49,6 @@ class Mail {
    * @returns { Boolean }
    **/
   async sendMagicLink(appName, email, url) {
-    // return true
     const data = {
       Messages: [
         {
@@ -80,7 +81,6 @@ class Mail {
    * @returns { Boolean }
    **/
   async verifyAccount({ firstName, email }, url) {
-    // return true
     const data = {
       Messages: [
         {
@@ -113,7 +113,6 @@ class Mail {
    * @returns { Boolean }
    **/
   async notifyOnAccountChanges({ firstName, email }, appName = null) {
-    // return true
     const data = {
       Messages: [
         {
