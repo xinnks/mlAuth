@@ -168,8 +168,57 @@ function accountChangesMarkup(firstName, appName = null) {
   `)
 }
 
+function accountDeletionMarkup(firstName) {
+  return new String(`
+  <!DOCTYPE html>
+  <html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Account Deletion</title>
+    <meta name="description" content="User Authentication Simplified">
+    
+    <style>
+      ${css}
+    </style>
+  </head>
+
+  <body>
+    <div style="min-height: 100vh;" class="p-0 m-0 w-full bg-gray-200">
+
+      <main class="flex flex-col items-center justify-around py-8 px-8">
+
+        ${mlAuthLogo}
+
+        <p class="p-4 m-4 width-full text-xl">
+          Hello ${firstName},
+        </p>
+
+        <p class="p-4 m-4 width-full text-xl">
+          You have successfully deleted your account.
+        </p>
+
+        <p class="p-4 m-4 width-full text-xl">
+          Hope you enjoyed using our service.
+        </p>
+
+        <p class="p-4 m-4 width-full text-xl">
+          Thanks, ${mlAuthService} Team.
+        </p>
+
+      </main>
+
+    </div>
+  </body>
+
+  </html>
+  `)
+}
+
 module.exports = {
   magicLinkMailMarkup,
   verifyAccount,
   accountChangesMarkup,
+  accountDeletionMarkup,
 }

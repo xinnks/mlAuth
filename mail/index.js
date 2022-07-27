@@ -6,6 +6,7 @@ const {
   magicLinkMailMarkup,
   verifyAccount,
   accountChangesMarkup,
+  accountDeletionMarkup,
 } = require("./mail-markups")
 const { appFromEmail, mlAuthService } = require("./../vars")
 
@@ -129,6 +130,37 @@ class Mail {
           Subject: "Account Changes",
           textPart: `Hello ${firstName}, \n\n Changes have been made to your ${appName} service account.\n\n If you did not make these changes, please notify us.`,
           HTMLPart: accountChangesMarkup(firstName, appName),
+        },
+      ],
+    }
+
+    return this.sendEmail(data)
+  }
+
+  /**
+   * @description This function sends a notification email to a user notifying them of the deletion of their account
+   * @param { Object } user => User's data
+   * @param { String } user.firstName => User's first name
+   * @param { String } user.email => User's email
+   * @returns { Boolean }
+   **/
+  async notifyOnAccountDeletion({ firstName, email }) {
+    const data = {
+      Messages: [
+        {
+          From: {
+            Email: appFromEmail,
+            Name: mlAuthService,
+          },
+          To: [
+            {
+              Email: email,
+              Name: firstName,
+            },
+          ],
+          Subject: "Account Changes",
+          textPart: `Hello ${firstName}, \n\n You have successfully deleted your account.\n\n Hope you enjoyed using our service.`,
+          HTMLPart: accountDeletionMarkup(firstName),
         },
       ],
     }
