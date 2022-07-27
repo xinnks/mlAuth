@@ -10,6 +10,7 @@ const {
 } = require("./../controllers/service")
 const {
   updateAccountInformation,
+  deleteAccount,
 } = require("./../controllers/account")
 const Cors = require("cors")
 const corsOptions = {
@@ -44,6 +45,12 @@ router.post("/generate-keys", regenerateAppKeys)
  * @description Receives user update requests
  */
 router.post("/update-account", updateAccountInformation)
+
+/**
+ * @description Receives user account deletion requests
+ */
+router.post("/delete-account", deleteAccount)
+
 /**
  * @description Receives app update requests
  */
