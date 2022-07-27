@@ -6,8 +6,15 @@ const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
 }
+const preflightOptions = {
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
+}
 
 // middlewares
+router.options("*", Cors(preflightOptions))
 router.use(Cors(corsOptions))
 
 /**
