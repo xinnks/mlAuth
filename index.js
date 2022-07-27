@@ -49,6 +49,7 @@ app.get("/test-email", async (request, response) => {
 })
 
 app.use("/service", services)
+app.use("/auth", auth)
 app.use("/ml", magicLinks)
 
 app.listen(PORT, () => console.log("running server on " + PORT))
