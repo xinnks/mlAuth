@@ -1,5 +1,9 @@
 const userDb = require("./../db/users");
+const appDb = require("./../db/apps");
+const sessionDb = require("./../db/sessions");
+const magicLinkDb = require("./../db/magic-links");
 const { sendAccountChangesNotification } = require("./../utils")
+const Mail = require("./../mail");
 
 /**
  * @description Updates a user account's information
