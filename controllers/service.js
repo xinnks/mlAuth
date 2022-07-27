@@ -144,7 +144,7 @@ async function updateAppInformation(req, res) {
   await sendAccountChangesNotification(
     account.firstName,
     account.email,
-    appInfo
+    appInfo.name
   )
 
   delete appUpdateResponse.secret
