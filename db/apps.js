@@ -87,10 +87,27 @@ async function deleteApp(id) {
   }
 }
 
+/**
+ * @description Deletes all user app
+ * @param {Object} deletionParameter - Attributes to identify item to delete
+ * @returns {Object}
+ */
+async function deleteApps(deletionParameter) {
+  try {
+    const response = await prisma.app.deleteMany({
+      where: deletionParameter,
+    })
+    return result("success", response)
+  } catch (error) {
+    return result("error", error)
+  }
+}
+
 module.exports = {
   createApp,
   findSingleApp,
   findManyApps,
   updateApp,
   deleteApp,
+  deleteApps,
 }

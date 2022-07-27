@@ -69,9 +69,26 @@ async function deleteSession(deletionParameter) {
   }
 }
 
+/**
+ * @description Deletes multiple sessions
+ * @param {Object} deletionParameter - Attributes to identify item to delete
+ * @returns {Object}
+ */
+async function deleteSessions(deletionParameter) {
+  try {
+    const response = await prisma.session.deleteMany({
+      where: deletionParameter,
+    })
+    return result("success", response)
+  } catch (error) {
+    return result("error", error)
+  }
+}
+
 module.exports = {
   createSession,
   findSession,
   updateSession,
   deleteSession,
+  deleteSessions,
 }
