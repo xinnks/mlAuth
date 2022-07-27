@@ -20,7 +20,13 @@ const Mail = require("./../mail")
  */
 async function createMagicLink(req, res) {
   const {
-    app: { name: appName, callbackUrl, id: appId, magicLinkTimeout, client: appClientKey },
+    app: {
+      name: appName,
+      callbackUrl,
+      id: appId,
+      magicLinkTimeout,
+      client: appClientKey,
+    },
     email,
   } = req.body
   if (!email)

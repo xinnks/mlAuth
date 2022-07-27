@@ -2,7 +2,12 @@
 
 const { appSalt1, appSalt2 } = require("./../vars")
 const appDb = require("./../db/apps")
-const { hashPassword, createHexToken, nowInSeconds, sendAccountChangesNotification } = require("./../utils")
+const {
+  hashPassword,
+  createHexToken,
+  nowInSeconds,
+  sendAccountChangesNotification,
+} = require("./../utils")
 const Session = require("./../auth/session")
 
 /**

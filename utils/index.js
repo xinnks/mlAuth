@@ -1,5 +1,5 @@
 const crypto = require("crypto")
-const Mail = require("./../mail");
+const Mail = require("./../mail")
 
 function UnauthorizedException(reason) {
   this.status = 401
@@ -71,7 +71,11 @@ function nowInSeconds() {
  * @param {String|null} appName - Name of app
  * @returns
  */
-async function sendAccountChangesNotification(firstName, email, appName= null) {
+async function sendAccountChangesNotification(
+  firstName,
+  email,
+  appName = null
+) {
   return new Mail().notifyOnAccountChanges({ firstName, email }, appName)
 }
 

@@ -1,19 +1,15 @@
-const userDb = require("./../db/users");
-const appDb = require("./../db/apps");
-const sessionDb = require("./../db/sessions");
-const magicLinkDb = require("./../db/magic-links");
+const userDb = require("./../db/users")
+const appDb = require("./../db/apps")
+const sessionDb = require("./../db/sessions")
+const magicLinkDb = require("./../db/magic-links")
 const { sendAccountChangesNotification } = require("./../utils")
-const Mail = require("./../mail");
+const Mail = require("./../mail")
 
 /**
  * @description Updates a user account's information
  */
 async function updateAccountInformation(req, res) {
-  let {
-    first_name: firstName,
-    last_name: lastName,
-    account,
-  } = req.body
+  let { first_name: firstName, last_name: lastName, account } = req.body
 
   if (!firstName && !lastName)
     return res.status(422).json({
@@ -29,8 +25,8 @@ async function updateAccountInformation(req, res) {
 
   let accountUpdateInfo
   accountUpdateInfo = {}
-  if(firstName)
-    accountUpdateInfo.firstName = firstName
+  if (firstName) accountUpdateInfo.firstName = firstName
+  if (lastName) accountUpdateInfo.lastName = lastName
   if(lastName)
     accountUpdateInfo.lastName = lastName
 
@@ -60,24 +56,24 @@ async function deleteAccount(req, res) {
   let { account } = req.body
 
   if(await deleteAllUserSessions(account.id) !== "success")
+  if ((await deleteAllUserSessions(account.id)) !== "success")
     res.status(500).json({
-      message: "Failed to delete user's sessions"
+      message: "Failed to delete user's sessions",
     })
 
   if(await deleteAllUserApps(account.id) !== "success")
+  if ((await deleteAllUserApps(account.id)) !== "success")
     res.status(500).json({
-      message: "Failed to delete user's apps"
+      message: "Failed to delete user's apps",
     })
 
   if(await deleteUserAccount(account.id) !== "success")
+  if ((await deleteUserAccount(account.id)) !== "success")
     res.status(500).json({
-      message: "Failed to delete user's account"
+      message: "Failed to delete user's account",
     })
 
-  await sendAccountDeletionNotification(
-    account.firstName,
-    account.email,
-  )
+  await sendAccountDeletionNotification(account.firstName, account.email)
 
   res.json({
     account,
@@ -91,8 +87,9 @@ async function deleteAccount(req, res) {
  * */
 async function deleteAllUserSessions(userId){
   if(!userId) return null;
-  const {status: sessionDeletionStatus} = await sessionDb.deleteSessions({
-    userId
+  if (!userId) return null
+  const { status: sessionDeletionStatus } = await sessionDb.deleteSessions({
+    userId,
   })
   return sessionDeletionStatus
 }
@@ -103,8 +100,9 @@ async function deleteAllUserSessions(userId){
  * */
 async function deleteAllUserApps(userId){
   if(!userId) return null;
-  const {status: appsDeletionStatus} = await appDb.deleteApps({
-    ownerId: userId
+  if (!userId) return null
+  const { status: appsDeletionStatus } = await appDb.deleteApps({
+    ownerId: userId,
   })
   return appsDeletionStatus
 }
@@ -115,7 +113,8 @@ async function deleteAllUserApps(userId){
  * */
 async function deleteUserAccount(userId){
   if(!userId) return null;
-  const {status: accountDeletionStatus} = await userDb.deleteUser(userId)
+  if (!userId) return null
+  const { status: accountDeletionStatus } = await userDb.deleteUser(userId)
   return accountDeletionStatus
 }
 

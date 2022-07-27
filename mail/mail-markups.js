@@ -148,7 +148,9 @@ function accountChangesMarkup(firstName, appName = null) {
         </p>
 
         <p class="p-4 m-4 width-full text-xl">
-          Changes have been made to your ${appName ? appName + ' app' : 'account'}.
+          Changes have been made to your ${
+            appName ? appName + " app" : "account"
+          }.
         </p>
 
         <p class="p-4 m-4 width-full text-xl">
