@@ -48,12 +48,6 @@ async function createNewApp(req, res) {
       message: `Failed to create app. ${appCreationResponse}`,
     })
 
-  await sendAccountChangesNotification(
-    account.firstName,
-    account.email,
-    account.name
-  )
-
   appCreationResponse.secret = secret
   res.status(201).json({
     app: appCreationResponse,
