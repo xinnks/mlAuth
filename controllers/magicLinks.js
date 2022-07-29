@@ -120,9 +120,6 @@ async function verifyMagicLink(req, res) {
       message: "Magic link has expired",
     })
 
-  delete account.verificationToken
-  finalData.account = account
-
   // Gets user data based on log in request email
   // starts a login session for the mlAuth front-end client
   if (app.client === mlauthServiceClient) {
