@@ -5,6 +5,7 @@ const {
   generateAppKeys,
   insecureProductionAppAccess,
   hashPassword,
+  sendAccountChangesNotification,
 } = require("./../utils")
 const { appSalt1, mlauthServiceClient } = require("./../vars")
 const Session = require("./../auth/session")
