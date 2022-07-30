@@ -43,7 +43,7 @@ async function createMagicLink(req, res) {
       return res.status(404).json({
         message: "Account doesn't exist!",
       })
-    
+
     if (!userData.verified || userData.verificationToken)
       return res.status(403).json({
         message: "Account not verified!",
@@ -155,7 +155,7 @@ async function verifyMagicLink(req, res) {
         ownerId: userData.id,
       })
 
-    if (appsFetchStatus == "success" && fetchedApps.length)
+    if (appsFetchStatus === "success" && fetchedApps.length)
       finalData.apps = fetchedApps.map((app) => {
         delete app.secret
         return app

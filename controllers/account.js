@@ -20,7 +20,7 @@ async function updateAccountInformation(req, res) {
     if (lastName === account.lastName)
       return res.json({
         account,
-        message: "No changes made"
+        message: "No changes made",
       })
 
   let accountUpdateInfo
@@ -40,7 +40,7 @@ async function updateAccountInformation(req, res) {
 
   await sendAccountChangesNotification(
     accountUpdateResponse.firstName,
-    accountUpdateResponse.email,
+    accountUpdateResponse.email
   )
 
   res.json({

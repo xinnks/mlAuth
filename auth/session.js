@@ -21,7 +21,7 @@ class Session {
       userId,
       lifespan: parseInt(lifeSpan || timeOut),
       token: this.token,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     }
 
     const { status, data: createResponse } = await sessionDb.createSession(

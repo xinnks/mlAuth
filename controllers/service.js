@@ -1,6 +1,6 @@
 // mlAuth client service Controller
 
-const { appSalt1, appSalt2 } = require("./../vars")
+const { appSalt1 } = require("./../vars")
 const appDb = require("./../db/apps")
 const {
   hashPassword,
