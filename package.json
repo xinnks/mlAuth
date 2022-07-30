@@ -1,5 +1,5 @@
 {
-  "name": "mlAuth",
+  "name": "mlauth",
   "version": "1.0.0",
   "description": "Magic link authentication service",
   "main": "index.js",
@@ -7,12 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "nodemon index.js",
     "format": "prettier --write '*.js' '**/*.js'",
-    "dev": "concurrently \"pnpm format\" \"pnpm serve\""
+    "dev": "concurrently \"pnpm format\" \"pnpm serve\"",
+    "db:studio": "pnpm dlx prisma studio",
+    "db:push": "pnpm dlx prisma db push"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^4.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
@@ -23,6 +26,8 @@
   },
   "devDependencies": {
     "concurrently": "^7.2.2",
+    "eslint": "^8.19.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1"
   }
 }

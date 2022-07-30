@@ -6,18 +6,18 @@ const {
   magicLinkMailMarkup,
   verifyAccount,
   accountChangesMarkup,
+  accountDeletionMarkup,
 } = require("./mail-markups")
 const { appFromEmail, mlAuthService } = require("./../vars")
 
 class Mail {
-  constructor(appName) {
-    this.appName = appName
+  constructor() {
+    const keys = Buffer.from(
+      `${process.env.MAILJET_API_KEY}:${process.env.MAILJET_API_SECRET}`,
+      "utf8"
+    )
     this.headers = {
-      Authorization:
-        "Basic " +
-        btoa(
-          `${process.env.MAILJET_API_KEY}:${process.env.MAILJET_API_SECRET}`
-        ),
+      Authorization: `Basic ${keys.toString("base64")}`,
       "Content-Type": "application/json",
     }
   }
@@ -28,7 +28,6 @@ class Mail {
    * @returns { Boolean }
    **/
   async sendEmail(data) {
-    // return true
     try {
       await fetch(`https://api.mailjet.com/v3.1/send`, {
         method: "POST",
@@ -44,17 +43,18 @@ class Mail {
 
   /**
    * @description This function sends a magic link email to an email address
-   * @param { Object } details => Email details
+   * @param { String } appName => Name of app sending the magic link
+   * @param { String } email => Receiving email address
+   * @param { String } url => Magic link url
    * @returns { Boolean }
    **/
-  async sendMagicLink(email, url) {
-    // return true
+  async sendMagicLink(appName, email, url) {
     const data = {
       Messages: [
         {
           From: {
             Email: appFromEmail,
-            Name: this.appName,
+            Name: appName,
           },
           To: [
             {
@@ -62,9 +62,9 @@ class Mail {
               Name: "",
             },
           ],
-          Subject: "Login to " + this.appName,
-          TextPart: `Hey, \n\n Visit this link to login.\n\n ${url}\n\n Thanks, ${this.appName}`,
-          HTMLPart: magicLinkMailMarkup(url, this.appName),
+          Subject: "Login to " + appName,
+          TextPart: `Hey, \n\n Visit this link to login.\n\n ${url}\n\n Thanks, ${appName}`,
+          HTMLPart: magicLinkMailMarkup(url, appName),
         },
       ],
     }
@@ -74,11 +74,13 @@ class Mail {
 
   /**
    * @description This function sends a service account verification email
-   * @param { Object } details => Service account details
+   * @param { Object } user => User's data
+   * @param { String } user.firstName => User's first name
+   * @param { String } user.email => User's email
+   * @param { String } url => Account verification url
    * @returns { Boolean }
    **/
   async verifyAccount({ firstName, email }, url) {
-    // return true
     const data = {
       Messages: [
         {
@@ -104,11 +106,13 @@ class Mail {
 
   /**
    * @description This function sends a notification email to an account on account details changes
-   * @param { Object } details => app account details
+   * @param { Object } user => User's data
+   * @param { String } user.firstName => User's first name
+   * @param { String } user.email => User's email
+   * @param { String|null } appName => Name of the app that changes have been made to
    * @returns { Boolean }
    **/
-  async notifyOnAccountChanges({ user: { firstName }, appName, email }) {
-    // return true
+  async notifyOnAccountChanges({ firstName, email }, appName = null) {
     const data = {
       Messages: [
         {
@@ -125,6 +129,37 @@ class Mail {
           Subject: "Account Changes",
           textPart: `Hello ${firstName}, \n\n Changes have been made to your ${appName} service account.\n\n If you did not make these changes, please notify us.`,
           HTMLPart: accountChangesMarkup(firstName, appName),
+        },
+      ],
+    }
+
+    return this.sendEmail(data)
+  }
+
+  /**
+   * @description This function sends a notification email to a user notifying them of the deletion of their account
+   * @param { Object } user => User's data
+   * @param { String } user.firstName => User's first name
+   * @param { String } user.email => User's email
+   * @returns { Boolean }
+   **/
+  async notifyOnAccountDeletion({ firstName, email }) {
+    const data = {
+      Messages: [
+        {
+          From: {
+            Email: appFromEmail,
+            Name: mlAuthService,
+          },
+          To: [
+            {
+              Email: email,
+              Name: firstName,
+            },
+          ],
+          Subject: "Account Deletion",
+          textPart: `Hey ${firstName}, \n\n It's been fun having you here.\n\n Though sad to see you go, we know every beginning has an end. \n\n Tchao! dev.`,
+          HTMLPart: accountDeletionMarkup(firstName),
         },
       ],
     }

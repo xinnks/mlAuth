@@ -1,7 +1,9 @@
-const services = require("./services")
+const service = require("./service")
 const magicLinks = require("./magicLinks")
+const auth = require("./auth")
 
 module.exports = {
-  services,
+  service,
   magicLinks,
+  auth,
 }

@@ -4,65 +4,80 @@ const {
   appUrl,
   appSalt2,
   timeOut,
-  magicLinksEmailIndex,
   mlauthServiceClient,
 } = require("./../vars")
 const Session = require("./../auth/session")
-const Database = require("./../db")
-const db = new Database()
-const {
-  hashPassword,
-  createHexToken,
-  nowInSeconds,
-  comparePasswordHashes,
-  result,
-} = require("./../utils")
+const magicLinksDb = require("./../db/magic-links")
+const appsDb = require("./../db/apps")
+const usersDb = require("./../db/users")
+const { createHexToken, nowInSeconds, hashPassword } = require("./../utils")
 const Mail = require("./../mail")
 
+/**
+ * @description Receives a login request from an authenticated client
+ * Sends a magic link to the provided email
+ * Responds to the client with JSON and a 201 status code
+ */
 async function createMagicLink(req, res) {
-  let {
-    account: { appName, callbackUrl, refId },
+  const {
+    app: {
+      name: appName,
+      callbackUrl,
+      id: appId,
+      magicLinkTimeout,
+      client: appClientKey,
+    },
     email,
-    timeout,
   } = req.body
   if (!email)
-    return res.status(403).json({
+    return res.status(422).json({
       message: `Missing credentials: [email]`,
     })
 
-  let { exists, data: activeRequest } = await checkForActiveMagicLink(
-      refId,
+  // When visiting mlAuth's client site
+  // User must be registered to proceed with making a magic link request
+  // User must also have verified their account
+  if (appClientKey === mlauthServiceClient) {
+    const userData = await checkAccountEmail(email)
+    if (!userData)
+      return res.status(404).json({
+        message: "Account doesn't exist!",
+      })
+    
+    if (!userData.verified || userData.verificationToken)
+      return res.status(403).json({
+        message: "Account not verified!",
+      })
+  }
+
+  let { exists, data: activeMagicLink } = await checkForActiveMagicLink(
+      appId,
       email,
-      timeout || timeOut
+      magicLinkTimeout || timeOut
     ),
     token
 
   if (exists) {
-    ;({
-      data: { token },
-    } = activeRequest)
+    ;({ token } = activeMagicLink)
 
     await notifyUser({ appName, callbackUrl }, email, token)
 
     return res.json({
-      data: activeRequest,
-      message: "Resent previous login request",
+      data: activeMagicLink,
+      message: "Sent previous login request",
     })
   }
 
-  token = await createHexToken(`${email}${appName}${nowInSeconds()}`, appSalt2)
+  token = createHexToken(`${email}${appName}${nowInSeconds()}`, appSalt2)
 
   let magicLinkData = {
     token,
     email,
-    lifeSpan: parseInt(timeout || timeOut),
-    createdAt: nowInSeconds(),
-    appRefId: parseInt(refId),
+    lifespan: parseInt(magicLinkTimeout || timeOut),
+    appId,
   }
-  const { status: creationStatus, data: creationResponse } = await db.create(
-    magicLinksCollection,
-    magicLinkData
-  )
+  const { status: creationStatus, data: creationResponse } =
+    await magicLinksDb.createLink(magicLinkData)
 
   if (creationStatus !== "success")
     return res.status(401).json({
@@ -78,30 +93,32 @@ async function createMagicLink(req, res) {
 }
 
 /**
- * Verifies a magic link
+ * @description Receives a login verification request
+ * Sends a magic link to the provided email
+ * Responds to the client with JSON and a 201 status code
  */
 async function verifyMagicLink(req, res) {
-  let { account, token } = req.body,
-    finalData,
-    finalMessage = "Magic link is active"
+  let finalData,
+    finalMessage = "Magic link is active",
+    { app, account, token: magicLinkToken } = req.body
 
-  if (!token)
-    return res.status(403).json({
+  if (!magicLinkToken)
+    return res.status(401).json({
       message: "Missing credentials. [token]",
     })
 
-  const { status: findStatus, data: magicLinkData } = await db.find(
-    magicLinkTokenIndex,
-    token
-  )
+  const { status: findStatus, data: magicLinkData } =
+    await magicLinksDb.findLink({
+      token: magicLinkToken,
+    })
 
   if (findStatus !== "success" || !magicLinkData)
     return res.status(401).json({
-      message: "Unknown token",
+      message: "Unknown magic link",
     })
 
   finalData = {
-    magicLink: magicLinkData.data,
+    magicLink: magicLinkData,
   }
 
   if (!checkMagicLinkValidity(magicLinkData))
@@ -110,24 +127,48 @@ async function verifyMagicLink(req, res) {
       message: "Magic link has expired",
     })
 
+  // Gets user data based on log in request email
   // starts a login session for the mlAuth front-end client
-  if (account.client === mlauthServiceClient) {
-    let { status: sessionStatus, data: sessionData } = await new Session(
-      token
-    ).create(account.refId, account.lifeSpan || timeOut)
+  if (app.client === mlauthServiceClient) {
+    let { status: fetchUserStatus, data: userData } =
+      await usersDb.findSingleUser({
+        email: magicLinkData.email,
+      })
+    if (fetchUserStatus !== "success" || !userData)
+      return res.status(404).json({
+        message: "User not found",
+      })
 
-    if (sessionStatus !== "success")
-      return res.json({
+    let sessionToken = hashPassword(magicLinkToken, appSalt2)
+    let { status: sessionInitiateStatus, data: sessionData } =
+      await new Session(sessionToken).create(userData.id, timeOut)
+
+    if (sessionInitiateStatus !== "success")
+      return res.status(500).json({
         data: null,
         message: "Failed to start session",
       })
-    delete sessionData.appRefId
+
+    finalData.apps = []
+    let { status: appsFetchStatus, data: fetchedApps } =
+      await appsDb.findManyApps({
+        ownerId: userData.id,
+      })
+
+    if (appsFetchStatus == "success" && fetchedApps.length)
+      finalData.apps = fetchedApps.map((app) => {
+        delete app.secret
+        return app
+      })
+
+    delete sessionData.appId
+    delete userData.verificationToken
     finalData.session = sessionData
-    finalData.account = account
+    finalData.account = userData
     finalMessage = "Session started"
   }
 
-  await db.delete(magicLinksCollection, magicLinkData.refId)
+  await magicLinksDb.deleteLink(magicLinkData.id)
 
   res.json({
     ...finalData,
@@ -137,15 +178,15 @@ async function verifyMagicLink(req, res) {
 
 /// HELPERS
 
-async function checkForActiveMagicLink(appRefId, userEmail, timeout) {
-  let { status, data: magicLinks } = await db.findMany(
-    magicLinksEmailIndex,
-    userEmail
-  )
+async function checkForActiveMagicLink(appId, authUserEmail, timeout) {
+  let { status, data: magicLinks } = await magicLinksDb.findLinks({
+    email: authUserEmail,
+    appId,
+  })
   if (status !== "success" || !magicLinks.length) return { exists: false }
 
   const requestUnderTimeout = (element) =>
-    nowInSeconds() - element.data.createdAt < timeout - 20000
+    nowInSeconds() - Date.parse(element.createdAt) < timeout - 20000
 
   let index = magicLinks.findIndex(requestUnderTimeout)
 
@@ -154,17 +195,36 @@ async function checkForActiveMagicLink(appRefId, userEmail, timeout) {
   return { exists: true, data: magicLinks[index] }
 }
 
-async function checkMagicLinkValidity({ createdAt, lifeSpan }) {
-  return nowInSeconds() - createdAt < lifeSpan - 10000
+async function checkMagicLinkValidity({ createdAt, lifespan }) {
+  return nowInSeconds() - Date.parse(createdAt) < lifespan - 10000
+}
+
+/**
+ * @description Checks if email belongs to a registered user
+ * @param {String} email - Account email
+ * @return {Object|null}
+ * */
+async function checkAccountEmail(email) {
+  let { status: fetchUserStatus, data: userData } =
+    await usersDb.findSingleUser({
+      email,
+    })
+
+  return fetchUserStatus === "success" && userData ? userData : null
 }
 
 async function notifyUser({ appName, callbackUrl }, email, token) {
-  let loginUrl = `${callbackUrl}?token=${token}`
-  let sendMagicLink = await new Mail(appName).sendMagicLink(email, loginUrl)
-  return sendMagicLink
+  let loginUrl = `${callbackUrl}?token=${token}`,
+    sent = false
+
+  while (!sent) {
+    sent = new Mail().sendMagicLink(appName, email, loginUrl)
+  }
+
+  return true
 }
 
 module.exports = {
   createMagicLink,
-  verifyMagicLink
+  verifyMagicLink,
 }

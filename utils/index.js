@@ -1,4 +1,5 @@
 const crypto = require("crypto")
+const Mail = require("./../mail")
 
 function UnauthorizedException(reason) {
   this.status = 401
@@ -13,12 +14,11 @@ function BadRequestException(reason) {
 }
 
 function createHexToken(text, salt, length = null) {
-  let result = crypto
+  return crypto
     .createHash("sha256")
     .update(`${Date.now()}${text.replaceAll(" ")}`, "utf-8")
     .update(crypto.createHash("sha256").update(salt, "utf-8").digest())
     .digest("hex")
-  return length && length > 0 ? result.slice(0, length) : result
 }
 
 function hashPassword(password, salt) {
@@ -32,6 +32,15 @@ function hashPassword(password, salt) {
 function comparePasswordHashes(password, passwordHash, salt) {
   let attemptPasswordHash = hashPassword(password, salt)
   return passwordHash === attemptPasswordHash
+}
+
+/**
+ * @description Returns an array of missing parameters
+ * @param { Array } required Required parameters
+ * @param { Object } provided Provided parameters, likely a request body
+ */
+function getMissingParameters(required, provided) {
+  return required.filter((key) => !Object.keys(provided).includes(key))
 }
 
 /**
@@ -49,10 +58,25 @@ function result(status, data) {
 
 /**
  * @description Returns current time in seconds
- * @returns {Integer}
+ * @returns {Number}
  */
 function nowInSeconds() {
   return Date.now()
+}
+
+/**
+ * @description Sends a notification email to a user
+ * @param {String} firstName - User's first name
+ * @param {String} email - Receiver's email
+ * @param {String|null} appName - Name of app
+ * @returns
+ */
+async function sendAccountChangesNotification(
+  firstName,
+  email,
+  appName = null
+) {
+  return new Mail().notifyOnAccountChanges({ firstName, email }, appName)
 }
 
 module.exports = {
@@ -63,4 +87,6 @@ module.exports = {
   comparePasswordHashes,
   result,
   nowInSeconds,
+  getMissingParameters,
+  sendAccountChangesNotification,
 }

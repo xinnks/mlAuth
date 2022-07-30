@@ -1,30 +1,30 @@
 // Session manager for the mlAuth client
-const { createHexToken, nowInSeconds, result } = require("./../utils")
-const {
-  appSessionsCollection,
-  appSessionTokenIndex,
-  appRefIdIndex,
-  timeOut,
-} = require("./../vars")
-const Database = require("./../db")
-const db = new Database()
+
+const { nowInSeconds, result } = require("./../utils")
+const { timeOut } = require("./../vars")
+const sessionDb = require("./../db/sessions")
+const usersDb = require("./../db/users")
 
 class Session {
   constructor(token) {
     this.token = token
   }
 
-  async create(appRefId, lifeSpan = timeOut) {
+  /**
+   * @description Creates a new session
+   * @param {String} userId - Id of user the session belongs to
+   * @param {Number} lifeSpan - Lifespan of the session to be created
+   * @returns {Object}
+   */
+  async create(userId, lifeSpan) {
     let sessionData = {
-      appRefId,
-      lifeSpan,
+      userId,
+      lifespan: parseInt(lifeSpan || timeOut),
       token: this.token,
-      createdAt: nowInSeconds(),
-      updatedAt: nowInSeconds(),
+      createdAt: new Date().toISOString()
     }
 
-    const { status, data: createResponse } = await db.create(
-      appSessionsCollection,
+    const { status, data: createResponse } = await sessionDb.createSession(
       sessionData
     )
 
@@ -33,47 +33,62 @@ class Session {
     return result("success", createResponse)
   }
 
+  /**
+   * @description - Verifies a session's validity and expiration status
+   */
   async verify() {
-    const { status: sessionStatus, data: sessionData } = await db.find(
-      appSessionTokenIndex,
-      this.token
-    )
+    const { status: sessionStatus, data: sessionData } =
+      await sessionDb.findSession({
+        token: this.token,
+      })
     if (sessionStatus !== "success" || !sessionData)
       return result("failure", "Unknown session")
-    let {
-      data: { updatedAt, lifeSpan },
-      refId,
-    } = sessionData
 
-    if (nowInSeconds() - updatedAt > lifeSpan - 10000)
-      return result("failure", "Session expired")
+    let { updatedAt, lifespan, id } = sessionData
 
-    return this.refresh(refId)
+    return nowInSeconds() - Date.parse(updatedAt) < lifespan - 10000
+      ? this.refresh(id)
+      : result("failure", "Session expired")
   }
 
-  async refresh(sessionRefId) {
-    const { status: updateStatus, data: response } = await db.update(
-      appSessionsCollection,
-      sessionRefId,
-      { updatedAt: nowInSeconds() }
-    )
+  /**
+   * @description Increases a session's duration
+   * @param {String} sessionId - Session id
+   */
+  async refresh(sessionId) {
+    const { status: updateStatus, data: response } =
+      await sessionDb.updateSession(
+        { id: sessionId },
+        { updatedAt: new Date().toISOString() }
+      )
 
     if (updateStatus !== "success") return result("failure", response)
+
+    const { status: userStatus, data: userInfo } = await usersDb.findSingleUser(
+      {
+        id: response.userId,
+      }
+    )
+
+    if (userStatus === "success") response.user = userInfo
 
     return result("success", response)
   }
 
+  /**
+   * @description - Deletes a session
+   */
   async delete() {
-    const { status: sessionStatus, data: sessionData } = await db.find(
-      appSessionTokenIndex,
-      this.token
-    )
+    const { status: sessionStatus, data: sessionData } =
+      await sessionDb.findSession({
+        token: this.token,
+      })
     if (sessionStatus !== "success" || !sessionData) return false
 
-    let { status: deletionStatus, data: deletedData } = await db.delete(
-      appSessionsCollection,
-      sessionData.refId
-    )
+    let { status: deletionStatus, data: deletedData } =
+      await sessionDb.deleteSession({
+        token: this.token,
+      })
 
     if (deletionStatus !== "success") return result("failure", deletedData)
 

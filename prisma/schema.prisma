@@ -1,0 +1,59 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  firstName String
+  lastName  String
+  verified  Boolean   @default(false)
+  verificationToken  String? @unique
+  apps      App[]
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Session {
+  userId    String?
+  id        String   @id @default(cuid())
+  token     String   @unique
+  lifespan  Int      @default(1800000)
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model App {
+  ownerId          String?
+  id               String      @id @default(cuid())
+  name             String
+  secret           String?     @unique
+  client           String?     @unique
+  callbackUrl      String?
+  magicLinkTimeout Int         @default(1800000)
+  production       Boolean     @default(false)
+  owner            User?       @relation(fields: [ownerId], references: [id])
+  magicLinks       MagicLink[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model MagicLink {
+  appId     String?
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  lifespan  Int      @default(1800000)
+  app       App?     @relation(fields: [appId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
