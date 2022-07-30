@@ -1,5 +1,6 @@
 const crypto = require("crypto")
 const Mail = require("./../mail")
+const { appSalt1, appSalt2 } = require("./../vars")
 
 function UnauthorizedException(reason) {
   this.status = 401
