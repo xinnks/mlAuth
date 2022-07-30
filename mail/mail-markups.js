@@ -10,7 +10,7 @@ const mlAuthLogo = `
               <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 48px; align-self: center">
             </div>
             <div style="display: inline-flex; flex: 1 1 0%; align-items: center; justify-content: center; border-top-right-radius: 12px; border-bottom-right-radius: 12px; background-color: #fcf487; padding-left: 8px">
-              <span style="padding-top: 16px; padding-bottom: 16px; font-size: 24px; font-weight: 600; color: #1f2937">optional mlAuth</span>
+              <span style="padding-top: 16px; padding-bottom: 16px; font-size: 24px; font-weight: 600; color: #1f2937">mlAuth</span>
             </div>
           </td>
         </tr>
@@ -24,7 +24,7 @@ const footerMarkup = `
       <p style="margin: 0 0 16px; display: flex; align-items: center; justify-content: center; text-transform: uppercase">
         <span>Powered By </span>
         <a href="${mlAuthUrl}" style="margin-left: 8px; margin-right: 8px">
-          <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 32px; align-self: center">
+          <img alt="mlAuth" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 32px; align-self: center">
         </a>
       </p>
       <p style="margin: 0; font-style: italic">Securely authenticate your users</p>
