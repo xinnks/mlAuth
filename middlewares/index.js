@@ -1,5 +1,11 @@
 const { basicAuthentication } = require("./../auth")
-const { comparePasswordHashes, result } = require("./../utils")
+const {
+  comparePasswordHashes,
+  result,
+  generateAppKeys,
+  insecureProductionAppAccess,
+  hashPassword,
+} = require("./../utils")
 const { appSalt1, mlauthServiceClient } = require("./../vars")
 const Session = require("./../auth/session")
 const appDb = require("./../db/apps")
@@ -56,6 +62,31 @@ async function appAuthentication(req, res, next) {
     return res.status(404).json({
       message: "App not found",
     })
+
+  if (insecureProductionAppAccess(appInfo, req)) {
+    let { client: newClient, secret: newSecret } = generateAppKeys(
+      email,
+      appInfo.name,
+      appInfo.callbackUrl
+    )
+
+    const { status: appUpdateStatus, data: appUpdateResponse } =
+      await appDb.updateApp(appInfo.id, {
+        client: newClient,
+        secret: hashPassword(newSecret, appSalt1),
+      })
+
+    if (appUpdateStatus === "success")
+      await sendAccountChangesNotification(
+        account.firstName,
+        account.email,
+        appInfo.name
+      )
+
+    return res.status(401).json({
+      message: "Production apps can only be accessed via 'https' protocol",
+    })
+  }
 
   let { secret: storedSecret } = appInfo
   if (!comparePasswordHashes(secret, storedSecret, appSalt1))

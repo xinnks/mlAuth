@@ -80,6 +80,16 @@ async function sendAccountChangesNotification(
 }
 
 /**
+ * @description Checks if a production app is being insecurely accessed
+ * @param {Object} app
+ * @param {Request} req
+ * @returns {Boolean}
+ * */
+function insecureProductionAppAccess(app, req) {
+  return app.production && !req.secure
+}
+
+/**
  * @description Generates "client" and "secret" keys
  * @param {String} email user's email
  * @param {String} appName name of the app which the keys are to be generated for
@@ -111,4 +121,5 @@ module.exports = {
   getMissingParameters,
   sendAccountChangesNotification,
   generateAppKeys,
+  insecureProductionAppAccess,
 }
