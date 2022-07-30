@@ -79,6 +79,27 @@ async function sendAccountChangesNotification(
   return new Mail().notifyOnAccountChanges({ firstName, email }, appName)
 }
 
+/**
+ * @description Generates "client" and "secret" keys
+ * @param {String} email user's email
+ * @param {String} appName name of the app which the keys are to be generated for
+ * @param {String} callbackUrl app's callback url
+ * @returns {Object}
+ */
+function generateAppKeys(email, appName, callbackUrl) {
+  if (!email || !appName || !callbackUrl) throw new Error("Parameters missing")
+
+  const client = createHexToken(
+      `${email}${appName}${callbackUrl}${nowInSeconds()}`,
+      appSalt2
+    ),
+    secret = createHexToken(
+      `${email}${appName}${callbackUrl}${nowInSeconds()}`,
+      appSalt1
+    )
+  return { client, secret }
+}
+
 module.exports = {
   UnauthorizedException,
   BadRequestException,
@@ -89,4 +110,5 @@ module.exports = {
   nowInSeconds,
   getMissingParameters,
   sendAccountChangesNotification,
+  generateAppKeys,
 }

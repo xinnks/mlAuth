@@ -4,9 +4,8 @@ const { appSalt1, appSalt2 } = require("./../vars")
 const appDb = require("./../db/apps")
 const {
   hashPassword,
-  createHexToken,
-  nowInSeconds,
   sendAccountChangesNotification,
+  generateAppKeys,
 } = require("./../utils")
 const Session = require("./../auth/session")
 
@@ -212,27 +211,6 @@ async function getAppInformation(appId) {
   const { status, data } = await appDb.findSingleApp({ id: appId })
   if (status !== "success") return null
   return data
-}
-
-/**
- * @description Generates "client" and "secret" keys
- * @param {String} email user's email
- * @param {String} appName name of the app which the keys are to be generated for
- * @param {String} callbackUrl app's callback url
- * @returns {Object}
- */
-function generateAppKeys(email, appName, callbackUrl) {
-  if (!email || !appName || !callbackUrl) throw new Error("Parameters missing")
-
-  const client = createHexToken(
-      `${email}${appName}${callbackUrl}${nowInSeconds()}`,
-      appSalt2
-    ),
-    secret = createHexToken(
-      `${email}${appName}${callbackUrl}${nowInSeconds()}`,
-      appSalt1
-    )
-  return { client, secret }
 }
 
 /**
