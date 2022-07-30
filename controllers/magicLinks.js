@@ -34,12 +34,19 @@ async function createMagicLink(req, res) {
       message: `Missing credentials: [email]`,
     })
 
-  // If visiting mlAuth's client site
+  // When visiting mlAuth's client site
   // User must be registered to proceed with making a magic link request
+  // User must also have verified their account
   if (appClientKey === mlauthServiceClient) {
-    if (!(await checkAccountEmail(email)))
+    const userData = await checkAccountEmail(email)
+    if (!userData)
       return res.status(404).json({
         message: "Account doesn't exist!",
+      })
+    
+    if (!userData.verified || userData.verificationToken)
+      return res.status(403).json({
+        message: "Account not verified!",
       })
   }
 
@@ -195,6 +202,7 @@ async function checkMagicLinkValidity({ createdAt, lifespan }) {
 /**
  * @description Checks if email belongs to a registered user
  * @param {String} email - Account email
+ * @return {Object|null}
  * */
 async function checkAccountEmail(email) {
   let { status: fetchUserStatus, data: userData } =
@@ -202,7 +210,7 @@ async function checkAccountEmail(email) {
       email,
     })
 
-  return fetchUserStatus === "success" && userData
+  return fetchUserStatus === "success" && userData ? userData : null
 }
 
 async function notifyUser({ appName, callbackUrl }, email, token) {
