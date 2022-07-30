@@ -35,7 +35,8 @@ const footerMarkup = `
     </td>
   </tr>`
 
-const dynamicEmailHeader = (appName) => appName === mlAuthService ? mlAuthLogo : ``
+const dynamicEmailHeader = (appName) =>
+  appName === mlAuthService ? mlAuthLogo : ``
 
 function magicLinkMailMarkup(url, appName) {
   return new String(`
@@ -351,7 +352,9 @@ function accountChangesMarkup(firstName, appName = null) {
                       <tr>
                         <td class="sm-px-6" style="background-color: #fff; padding: 48px; text-align: center">
                           <p style="margin: 0; font-size: 18px; font-weight: 600">Hey there,</p>
-                          <p style="font-size: 16px; color: #374151">Changes have been made to your ${ appName ? appName + " app" : "account" }.</p>
+                          <p style="font-size: 16px; color: #374151">Changes have been made to your ${
+                            appName ? appName + " app" : "account"
+                          }.</p>
                           <div class="sm-h-8" style="line-height: 24px">&zwnj;</div>
                           <p style="font-size: 16px; color: #374151">If you did not make these changes, please notify us.</p>
                           <p style="font-size: 16px; color: #374151">Thanks.</p>
