@@ -5,6 +5,8 @@ const footerMarkup = `
     <td style="padding: 32px; text-align: center; font-size: 12px; color: #4b5563">
       <p style="margin: 0 0 16px; display: flex; align-items: center; justify-content: center; text-transform: uppercase">
         <span>Powered By </span>
+      </p>
+      <p style="margin: 0 0 16px; display: flex; align-items: center; justify-content: center">
         <a href="${mlAuthUrl}" style="margin-left: 8px; margin-right: 8px">
           <img alt="mlAuth" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 32px; align-self: center">
         </a>
