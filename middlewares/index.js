@@ -65,7 +65,7 @@ async function appAuthentication(req, res, next) {
 
   if (insecureProductionAppAccess(appInfo, req)) {
     let { client: newClient, secret: newSecret } = generateAppKeys(
-      email,
+      appInfo.owner.email,
       appInfo.name,
       appInfo.callbackUrl
     )
@@ -78,8 +78,8 @@ async function appAuthentication(req, res, next) {
 
     if (appUpdateStatus === "success")
       await sendAccountChangesNotification(
-        account.firstName,
-        account.email,
+        appInfo.owner.firstName,
+        appInfo.owner.email,
         appInfo.name
       )
 
