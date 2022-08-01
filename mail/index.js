@@ -73,7 +73,7 @@ class Mail {
   }
 
   /**
-   * @description This function sends a service account verification email
+   * @description This function sends an account verification email
    * @param { Object } user => User's data
    * @param { String } user.firstName => User's first name
    * @param { String } user.email => User's email
@@ -127,7 +127,7 @@ class Mail {
             },
           ],
           Subject: "Account Changes",
-          textPart: `Hello ${firstName}, \n\n Changes have been made to your ${appName} service account.\n\n If you did not make these changes, please notify us.`,
+          textPart: `Hello ${firstName}, \n\n Changes have been made to your ${appName} app account.\n\n If you did not make these changes, please notify us.`,
           HTMLPart: accountChangesMarkup(firstName, appName),
         },
       ],

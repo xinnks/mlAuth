@@ -1,30 +1,14 @@
 const { mlAuthService, appUrl: mlAuthUrl } = require("./../vars")
 
-const mlAuthLogo = `
-  <tr>
-    <td align="center" class="sm-px-6">
-      <table class="sm-w-full" style="width: 75%" cellpadding="0" cellspacing="0" role="presentation">
-        <tr>
-          <td class="sm-pb-2" style="display: flex; width: 100%; padding-bottom: 8px">
-            <div style="display: flex; justify-content: center; border-top-left-radius: 12px; border-bottom-left-radius: 12px; background-color: #f9e80f; padding-left: 8px; padding-right: 8px">
-              <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 48px; align-self: center">
-            </div>
-            <div style="display: inline-flex; flex: 1 1 0%; align-items: center; justify-content: center; border-top-right-radius: 12px; border-bottom-right-radius: 12px; background-color: #fcf487; padding-left: 8px">
-              <span style="padding-top: 16px; padding-bottom: 16px; font-size: 24px; font-weight: 600; color: #1f2937">optional mlAuth</span>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>`
-
 const footerMarkup = `
   <tr>
     <td style="padding: 32px; text-align: center; font-size: 12px; color: #4b5563">
       <p style="margin: 0 0 16px; display: flex; align-items: center; justify-content: center; text-transform: uppercase">
         <span>Powered By </span>
+      </p>
+      <p style="margin: 0 0 16px; display: flex; align-items: center; justify-content: center">
         <a href="${mlAuthUrl}" style="margin-left: 8px; margin-right: 8px">
-          <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 32px; align-self: center">
+          <img alt="mlAuth" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 32px; align-self: center">
         </a>
       </p>
       <p style="margin: 0; font-style: italic">Securely authenticate your users</p>
@@ -34,8 +18,6 @@ const footerMarkup = `
       </p>
     </td>
   </tr>`
-
-const dynamicEmailHeader = (appName) => appName === mlAuthService ? mlAuthLogo : ``
 
 function magicLinkMailMarkup(url, appName) {
   return new String(`
@@ -104,7 +86,6 @@ function magicLinkMailMarkup(url, appName) {
           <tr>
             <td align="center" style="background-color: #e5e7eb; padding-top: 24px; padding-bottom: 24px">
               <table class="sm-w-full" style="width: 600px" cellpadding="0" cellspacing="0" role="presentation">
-                ${dynamicEmailHeader(appName)}
                 <tr>
                   <td class="sm-pb-3" style="padding: 0 16px 8px; text-align: center">
                     <h1 style="font-size: 24px; font-weight: 600; color: #000">Log in to ${appName}</h1>
@@ -217,22 +198,6 @@ function verifyAccount(firstName, url) {
             <td align="center" style="background-color: #e5e7eb; padding-top: 24px; padding-bottom: 24px">
               <table class="sm-w-full" style="width: 600px" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
-                  <td align="center" class="sm-px-6">
-                    <table class="sm-w-full" style="width: 75%" cellpadding="0" cellspacing="0" role="presentation">
-                      <tr>
-                        <td class="sm-pb-2" style="display: flex; width: 100%; padding-bottom: 8px">
-                          <div style="display: flex; justify-content: center; border-top-left-radius: 12px; border-bottom-left-radius: 12px; background-color: #f9e80f; padding-left: 8px; padding-right: 8px">
-                            <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 48px; align-self: center">
-                          </div>
-                          <div style="display: inline-flex; flex: 1 1 0%; align-items: center; justify-content: center; border-top-right-radius: 12px; border-bottom-right-radius: 12px; background-color: #fcf487; padding-left: 8px">
-                            <span style="padding-top: 16px; padding-bottom: 16px; font-size: 24px; font-weight: 600; color: #1f2937">mlAuth</span>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
                   <td class="sm-pb-3" style="padding-bottom: 8px; text-align: center">
                     <h1 style="font-size: 24px; font-weight: 600; color: #000">Confirm your registration</h1>
                   </td>
@@ -326,22 +291,6 @@ function accountChangesMarkup(firstName, appName = null) {
               <table class="sm-w-full" style="width: 600px" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td align="center" class="sm-px-6">
-                    <table class="sm-w-full" style="width: 75%" cellpadding="0" cellspacing="0" role="presentation">
-                      <tr>
-                        <td class="sm-pb-2" style="display: flex; width: 100%; padding-bottom: 8px">
-                          <div style="display: flex; justify-content: center; border-top-left-radius: 12px; border-bottom-left-radius: 12px; background-color: #f9e80f; padding-left: 8px; padding-right: 8px">
-                            <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 48px; align-self: center">
-                          </div>
-                          <div style="display: inline-flex; flex: 1 1 0%; align-items: center; justify-content: center; border-top-right-radius: 12px; border-bottom-right-radius: 12px; background-color: #fcf487; padding-left: 8px">
-                            <span style="padding-top: 16px; padding-bottom: 16px; font-size: 24px; font-weight: 600; color: #1f2937">mlAuth</span>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center" class="sm-px-6">
                     <h1 style="font-size: 24px; font-weight: 600; color: #000">Account changes made</h1>
                   </td>
                 </tr>
@@ -351,7 +300,9 @@ function accountChangesMarkup(firstName, appName = null) {
                       <tr>
                         <td class="sm-px-6" style="background-color: #fff; padding: 48px; text-align: center">
                           <p style="margin: 0; font-size: 18px; font-weight: 600">Hey there,</p>
-                          <p style="font-size: 16px; color: #374151">Changes have been made to your ${ appName ? appName + " app" : "account" }.</p>
+                          <p style="font-size: 16px; color: #374151">Changes have been made to your ${
+                            appName ? appName + " app" : "account"
+                          }.</p>
                           <div class="sm-h-8" style="line-height: 24px">&zwnj;</div>
                           <p style="font-size: 16px; color: #374151">If you did not make these changes, please notify us.</p>
                           <p style="font-size: 16px; color: #374151">Thanks.</p>
@@ -428,22 +379,6 @@ function accountDeletionMarkup(firstName) {
           <tr>
             <td align="center" style="background-color: #e5e7eb; padding-top: 24px; padding-bottom: 24px">
               <table class="sm-w-full" style="width: 600px" cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td align="center" class="sm-px-6">
-                    <table class="sm-w-full" style="width: 75%" cellpadding="0" cellspacing="0" role="presentation">
-                      <tr>
-                        <td class="sm-pb-2" style="display: flex; width: 100%; padding-bottom: 8px">
-                          <div style="display: flex; justify-content: center; border-top-left-radius: 12px; border-bottom-left-radius: 12px; background-color: #f9e80f; padding-left: 8px; padding-right: 8px">
-                            <img alt="mlAuth logo" src="https://res.cloudinary.com/djx5h4cjt/image/upload/c_scale,w_60/v1656599841/mlAuth/mlAuth.png" style="width: 48px; align-self: center">
-                          </div>
-                          <div style="display: inline-flex; flex: 1 1 0%; align-items: center; justify-content: center; border-top-right-radius: 12px; border-bottom-right-radius: 12px; background-color: #fcf487; padding-left: 8px">
-                            <span style="padding-top: 16px; padding-bottom: 16px; font-size: 24px; font-weight: 600; color: #1f2937">mlAuth</span>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
                 <tr>
                   <td class="sm-pb-3" style="padding: 0 16px 8px; text-align: center">
                     <h1 style="font-size: 24px; font-weight: 600; color: #000">Farewell ${firstName} 👋</h1>

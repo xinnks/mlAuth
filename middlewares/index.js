@@ -44,7 +44,7 @@ async function serviceSessionAuthentication(req, res, next) {
 
 /**
  * @description Authenticates apps trying to use the service to make magic link requests & verifications
- * @returns 
+ * @returns
  */
 async function appAuthentication(req, res, next) {
   let { status: bAStatus, data: credentials } = basicAuthentication(req)
