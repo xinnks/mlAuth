@@ -9,12 +9,12 @@
 <center>Magic link authentication service for your projects.</center>
 
 <center>
-    <i>[built for the <a href="https://planetscape.com" title="Planetscape website">Planetscape</a> x <a href="https://hashnode.com" title="Hasnode website">Hashnode</a> Hackathon]</i>
+    <i>[built for the <a href="https://planetscale.com" title="Planetscale website">Planetscale</a> x <a href="https://hashnode.com" title="Hasnode website">Hashnode</a> Hackathon]</i>
 </center>
 
 ## Technologies
 - ExpressJs - Backend framework
-- [Planetscape](https://planetscape.com) - Database
+- [Planetscale](https://planetscale.com) - Database
 - Prisma - Data schema ORM tool
 - Linode - Hosting
 - Vue.js - Front-end website
