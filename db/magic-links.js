@@ -59,7 +59,7 @@ async function findLinks(searchQuery, returnFields = null) {
  * @returns {Object}
  */
 async function deleteLink(id) {
-  try{
+  try {
     const response = await prisma.magicLink.delete({
       where: { id },
     })

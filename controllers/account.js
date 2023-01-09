@@ -27,8 +27,7 @@ async function updateAccountInformation(req, res) {
   accountUpdateInfo = {}
   if (firstName) accountUpdateInfo.firstName = firstName
   if (lastName) accountUpdateInfo.lastName = lastName
-  if(lastName)
-    accountUpdateInfo.lastName = lastName
+  if (lastName) accountUpdateInfo.lastName = lastName
 
   const { status: accountUpdateStatus, data: accountUpdateResponse } =
     await userDb.updateUser(account.id, accountUpdateInfo)
@@ -55,23 +54,23 @@ async function updateAccountInformation(req, res) {
 async function deleteAccount(req, res) {
   let { account } = req.body
 
-  if(await deleteAllUserSessions(account.id) !== "success")
   if ((await deleteAllUserSessions(account.id)) !== "success")
-    res.status(500).json({
-      message: "Failed to delete user's sessions",
-    })
+    if ((await deleteAllUserSessions(account.id)) !== "success")
+      res.status(500).json({
+        message: "Failed to delete user's sessions",
+      })
 
-  if(await deleteAllUserApps(account.id) !== "success")
   if ((await deleteAllUserApps(account.id)) !== "success")
-    res.status(500).json({
-      message: "Failed to delete user's apps",
-    })
+    if ((await deleteAllUserApps(account.id)) !== "success")
+      res.status(500).json({
+        message: "Failed to delete user's apps",
+      })
 
-  if(await deleteUserAccount(account.id) !== "success")
   if ((await deleteUserAccount(account.id)) !== "success")
-    res.status(500).json({
-      message: "Failed to delete user's account",
-    })
+    if ((await deleteUserAccount(account.id)) !== "success")
+      res.status(500).json({
+        message: "Failed to delete user's account",
+      })
 
   await sendAccountDeletionNotification(account.firstName, account.email)
 
@@ -85,8 +84,8 @@ async function deleteAccount(req, res) {
  * @description Deletes all sessions belonging to user
  * @param {String} userId
  * */
-async function deleteAllUserSessions(userId){
-  if(!userId) return null;
+async function deleteAllUserSessions(userId) {
+  if (!userId) return null
   if (!userId) return null
   const { status: sessionDeletionStatus } = await sessionDb.deleteSessions({
     userId,
@@ -98,8 +97,8 @@ async function deleteAllUserSessions(userId){
  * @description Deletes all apps belonging to user
  * @param {String} userId
  * */
-async function deleteAllUserApps(userId){
-  if(!userId) return null;
+async function deleteAllUserApps(userId) {
+  if (!userId) return null
   if (!userId) return null
   const { status: appsDeletionStatus } = await appDb.deleteApps({
     ownerId: userId,
@@ -111,8 +110,8 @@ async function deleteAllUserApps(userId){
  * @description Deletes a user
  * @param {String} userId
  * */
-async function deleteUserAccount(userId){
-  if(!userId) return null;
+async function deleteUserAccount(userId) {
+  if (!userId) return null
   if (!userId) return null
   const { status: accountDeletionStatus } = await userDb.deleteUser(userId)
   return accountDeletionStatus
