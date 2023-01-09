@@ -23,7 +23,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-      "url": "https://github.com/xinnks/mlAuth.git"
+    "url": "https://github.com/xinnks/mlAuth.git"
   },
   "dependencies": {
     "@prisma/client": "^4.0.0",
@@ -38,6 +38,7 @@
     "concurrently": "^7.2.2",
     "eslint": "^8.19.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "prisma": "^4.8.1"
   }
 }
